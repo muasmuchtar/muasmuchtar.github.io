@@ -67,6 +67,12 @@
   .btn-main{background:var(--cyan);color:#fff;}
   .btn-ghost{border:1px solid var(--line);color:var(--ink);}
 
+  .tool-link{display:flex;gap:14px;align-items:center;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);border-left:5px solid var(--yellow);border-radius:12px;padding:14px 16px;margin-bottom:34px;text-decoration:none;color:inherit;}
+  .tool-link:hover{border-color:var(--cyan);}
+  .t-ico{font-size:28px;}
+  .t-txt{flex:1;min-width:220px;font-size:13.5px;color:var(--soft);}
+  .t-txt b{display:block;color:var(--ink);font-size:15.5px;}
+  .t-go{font-weight:700;color:var(--cyan);font-size:14px;}
   details.pdfs{border:1px solid var(--line);border-radius:10px;padding:0 12px;}
   details.pdfs summary{cursor:pointer;font-weight:700;font-size:13.5px;padding:10px 0;list-style:none;}
   details.pdfs summary::-webkit-details-marker{display:none;}
@@ -107,6 +113,13 @@
 
   <h2 class="sec">Media pembelajaran</h2>
   <section class="grid" id="grid"></section>
+
+  <h2 class="sec">Alat dosen</h2>
+  <a class="tool-link" href="topik-pekanan/">
+    <span class="t-ico">🗓️</span>
+    <span class="t-txt"><b>Topik Pekanan · Lab CNC PNUP</b>Topik bahasan per pekan untuk CNC Dasar, Pemrograman NC/CNC, Ekonomi Teknik, dan Matematika, siap disalin ke SIAKAD.</span>
+    <span class="t-go">Buka →</span>
+  </a>
 </main>
 
 <footer class="wrap">

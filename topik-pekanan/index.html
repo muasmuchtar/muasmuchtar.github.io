@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#15171B">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Topik Pekanan — Lab CNC PNUP</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%2315171B'/><text x='32' y='44' font-size='34' font-family='monospace' font-weight='700' fill='%23F2B441' text-anchor='middle'>T</text></svg>">
+<style>
+:root{
+  /* Palet: panel kendali mesin CNC — grafit termesin + readout amber */
+  --ink:#15171B;
+  --panel:#1E2126;
+  --panel-2:#252931;
+  --edge:#343A44;
+  --edge-hi:#4A525E;
+  --paper:#ECEDEA;
+  --mute:#98A0AC;
+  --amber:#F2B441;
+  --amber-dim:#8A6620;
+  --jade:#4FB286;
+  --alarm:#E2685B;
+
+  /* Warna job — mengikuti pewarnaan lembar jadwal praktikum */
+  --j1:#7FB3E8;  /* TU-2A            */
+  --j2:#E8A76B;  /* TU-3A            */
+  --j3:#B4A6E0;  /* CAD CAM-Dahlih   */
+  --j4:#8FD0C4;  /* Mesin CNC Router */
+  --j5:#9FCF87;  /* Swansoft         */
+
+  --r:10px;
+  --mono:ui-monospace,"JetBrains Mono","Cascadia Mono","SF Mono",Consolas,"Roboto Mono",monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--ink);
+  color:var(--paper);
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.5;
+  padding-bottom:96px;
+  overflow-wrap:break-word;
+}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--amber);outline-offset:2px;border-radius:4px}
+
+/* ---------- Kepala aplikasi: strip readout ala DRO mesin ---------- */
+.topbar{
+  position:sticky;top:0;z-index:40;
+  background:linear-gradient(180deg,#191C21,#15171B);
+  border-bottom:1px solid var(--edge);
+  padding:12px 16px 10px;
+}
+.brand{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.brand h1{
+  margin:0;font-size:17px;font-weight:650;letter-spacing:-.01em;
+}
+.brand .sub{
+  font-family:var(--mono);font-size:11px;color:var(--mute);
+  letter-spacing:.08em;text-transform:uppercase;
+}
+.dro{
+  margin-top:9px;
+  font-family:var(--mono);font-size:12px;letter-spacing:.06em;
+  color:var(--amber);
+  background:#101216;
+  border:1px solid #2A2F37;
+  border-radius:6px;
+  padding:7px 11px;
+  display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.03);
+}
+.dro .lbl{color:var(--amber-dim)}
+.dro>span{white-space:nowrap}
+.dro>span:last-child{white-space:normal;text-align:right;margin-left:auto}
+
+/* ---------- Tab ---------- */
+.tabs{
+  display:flex;gap:4px;margin-top:11px;
+  overflow-x:auto;scrollbar-width:none;
+}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  flex:0 0 auto;background:none;border:1px solid transparent;
+  padding:7px 13px;border-radius:999px;
+  font-size:13.5px;font-weight:550;color:var(--mute);
+}
+.tab[aria-selected="true"]{
+  color:var(--ink);background:var(--amber);border-color:var(--amber);
+}
+
+/* ---------- Tata letak ---------- */
+main{padding:16px;max-width:820px;margin:0 auto}
+.screen{display:none}
+.screen.on{display:block;animation:rise .22s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.eyebrow{
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--mute);margin:0 0 10px;
+}
+.sect{margin-bottom:28px}
+
+/* ---------- Kartu kelas ---------- */
+.card{
+  background:var(--panel);
+  border:1px solid var(--edge);
+  border-radius:var(--r);
+  overflow:hidden;
+  margin-bottom:12px;
+}
+.card-head{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 14px;
+  border-bottom:1px solid var(--edge);
+  background:var(--panel-2);
+}
+.badge{
+  font-family:var(--mono);font-weight:700;font-size:13px;
+  background:var(--ink);border:1px solid var(--edge-hi);
+  border-radius:6px;padding:4px 9px;letter-spacing:.04em;
+  flex:0 0 auto;
+}
+.card-head .mk{font-size:13.5px;font-weight:600;line-height:1.25}
+.card-head .meta{font-size:11.5px;color:var(--mute);font-family:var(--mono)}
+.pill{
+  margin-left:auto;flex:0 0 auto;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;
+  text-transform:uppercase;padding:4px 8px;border-radius:999px;
+  border:1px solid var(--edge-hi);color:var(--mute);
+}
+.pill.now{background:var(--jade);border-color:var(--jade);color:#0C1A14;font-weight:700}
+.pill.soon{color:var(--amber);border-color:var(--amber-dim)}
+.pill.done{opacity:.6}
+
+.card-body{padding:14px}
+.topik{font-size:15px;line-height:1.55}
+.topik b{color:var(--paper)}
+.rotasi{
+  margin-top:12px;display:grid;gap:5px;
+}
+.rot-row{
+  display:flex;align-items:center;gap:9px;
+  font-size:13px;
+  background:var(--ink);border:1px solid var(--edge);
+  border-radius:7px;padding:7px 10px;
+}
+.rot-row .k{
+  font-family:var(--mono);font-size:11px;color:var(--mute);
+  flex:0 0 auto;min-width:74px;letter-spacing:.04em;
+}
+.swatch{width:9px;height:9px;border-radius:2px;flex:0 0 auto}
+.j1{background:var(--j1)}.j2{background:var(--j2)}.j3{background:var(--j3)}
+.j4{background:var(--j4)}.j5{background:var(--j5)}
+
+.actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+
+/* ---------- Tombol ala tuts panel mesin ---------- */
+.key{
+  border:1px solid var(--edge-hi);
+  background:linear-gradient(180deg,var(--panel-2),#1A1D23);
+  color:var(--paper);
+  border-radius:8px;padding:10px 14px;
+  font-size:13.5px;font-weight:600;
+  box-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 2px 0 #0D0F12;
+  transition:transform .06s ease,box-shadow .06s ease;
+}
+.key:active{transform:translateY(2px);box-shadow:0 0 0 rgba(0,0,0,0) inset}
+.key.primary{
+  background:linear-gradient(180deg,#F8C55E,var(--amber));
+  border-color:#C89430;color:#1A1206;box-shadow:0 2px 0 #8A6620;
+}
+.key.ghost{background:none;box-shadow:none;border-color:var(--edge)}
+.key.sm{padding:7px 11px;font-size:12.5px}
+.key.copied{background:linear-gradient(180deg,#66C79B,var(--jade));border-color:#2F7A57;color:#08160F;box-shadow:0 2px 0 #2F7A57}
+
+/* ---------- Daftar pertemuan ---------- */
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.chip{
+  border:1px solid var(--edge);background:var(--panel);
+  border-radius:999px;padding:6px 13px;font-size:13px;color:var(--mute);font-weight:550;
+}
+.chip[aria-pressed="true"]{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+
+.row{
+  width:100%;text-align:left;display:flex;gap:12px;align-items:flex-start;
+  background:var(--panel);border:1px solid var(--edge);
+  border-radius:var(--r);padding:12px 13px;margin-bottom:8px;
+}
+.row:hover{border-color:var(--edge-hi)}
+.row .num{
+  font-family:var(--mono);font-size:12px;font-weight:700;color:var(--amber);
+  flex:0 0 auto;min-width:34px;padding-top:2px;letter-spacing:.03em;
+}
+.row .txt{flex:1;min-width:0}
+.row .t1{display:block;font-size:14.5px;font-weight:600;line-height:1.35}
+.row .t2{display:block;font-size:12px;color:var(--mute);font-family:var(--mono);margin-top:3px;letter-spacing:.03em}
+.row.is-now{border-color:var(--jade);box-shadow:0 0 0 1px var(--jade) inset}
+.row.is-past{opacity:.52}
+.row .arw{color:var(--mute);flex:0 0 auto;font-family:var(--mono)}
+
+/* ---------- Panel geser detail ---------- */
+.sheet-bg{
+  position:fixed;inset:0;background:rgba(8,9,11,.72);
+  backdrop-filter:blur(3px);z-index:60;display:none;
+}
+.sheet-bg.on{display:block}
+.sheet{
+  position:fixed;left:0;right:0;bottom:0;z-index:61;
+  max-height:88vh;overflow:auto;
+  background:var(--panel);
+  border-top:1px solid var(--edge-hi);
+  border-radius:16px 16px 0 0;
+  padding:0 16px calc(24px + env(safe-area-inset-bottom));
+  transform:translateY(100%);transition:transform .24s cubic-bezier(.2,.8,.3,1);
+  visibility:hidden;pointer-events:none;
+  max-width:820px;margin:0 auto;
+}
+.sheet.on{transform:none;visibility:visible;pointer-events:auto}
+.grip{width:38px;height:4px;border-radius:99px;background:var(--edge-hi);margin:10px auto 4px}
+.sheet-head{position:sticky;top:0;background:var(--panel);padding-bottom:10px;z-index:2}
+.sheet h2{margin:6px 0 2px;font-size:19px;line-height:1.25}
+.sheet .sh-meta{font-family:var(--mono);font-size:11.5px;color:var(--mute);letter-spacing:.05em}
+
+.preview{
+  font-family:var(--mono);font-size:12.5px;line-height:1.6;
+  background:#101216;border:1px solid #2A2F37;border-radius:8px;
+  padding:11px 12px;white-space:pre-wrap;color:#D6D9DD;margin-top:10px;
+  max-height:190px;overflow:auto;
+}
+.kv{display:grid;grid-template-columns:88px 1fr;gap:4px 12px;font-size:13.5px;margin-top:12px}
+.kv dt{font-family:var(--mono);font-size:11px;color:var(--mute);letter-spacing:.06em;text-transform:uppercase;padding-top:3px}
+.kv dd{margin:0}
+
+/* ---------- Cari ---------- */
+.search{
+  width:100%;background:var(--panel);border:1px solid var(--edge);
+  color:var(--paper);border-radius:10px;padding:12px 14px;font-size:15px;
+  font-family:var(--sans);
+}
+.search::placeholder{color:var(--mute)}
+
+/* ---------- Pengaturan ---------- */
+.set-row{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  padding:12px 0;border-bottom:1px solid var(--edge);
+}
+.set-row label{font-size:14px;flex:1;min-width:150px}
+.set-row .hint{display:block;font-size:12px;color:var(--mute);margin-top:2px}
+input[type=date],select{
+  background:var(--panel-2);border:1px solid var(--edge-hi);color:var(--paper);
+  border-radius:8px;padding:8px 10px;font-size:14px;font-family:var(--mono);
+  color-scheme:dark;
+}
+.note{
+  font-size:12.5px;color:var(--mute);line-height:1.55;
+  border-left:2px solid var(--amber-dim);padding-left:11px;margin:14px 0;
+}
+.note.warn{border-left-color:var(--alarm);color:#E9B7B1}
+.hint.note-t{color:var(--amber);margin-top:5px;line-height:1.45}
+
+/* ---------- Toast ---------- */
+.toast{
+  position:fixed;left:50%;bottom:26px;transform:translate(-50%,20px);
+  background:var(--jade);color:#08160F;font-weight:650;font-size:14px;
+  padding:11px 20px;border-radius:999px;z-index:90;
+  opacity:0;pointer-events:none;transition:.2s;
+  box-shadow:0 8px 24px rgba(0,0,0,.45);
+}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+.empty{
+  text-align:center;color:var(--mute);font-size:14px;
+  border:1px dashed var(--edge-hi);border-radius:var(--r);padding:28px 18px;
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <h1>Topik Pekanan</h1>
+    <span class="sub">Lab CNC · PNUP</span>
+  </div>
+  <div class="dro">
+    <span><span class="lbl">TGL</span> <span id="dro-tgl">—</span></span>
+    <span><span class="lbl">PEKAN</span> <span id="dro-pekan">—</span></span>
+  </div>
+  <nav class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true"  data-scr="beranda">Pekan ini</button>
+    <button class="tab" role="tab" aria-selected="false" data-scr="kelas">Semua kelas</button>
+    <button class="tab" role="tab" aria-selected="false" data-scr="cari">Cari topik</button>
+    <button class="tab" role="tab" aria-selected="false" data-scr="atur">Pengaturan</button>
+  </nav>
+</header>
+
+<main>
+  <section class="screen on" id="scr-beranda"></section>
+  <section class="screen"    id="scr-kelas"></section>
+  <section class="screen"    id="scr-cari"></section>
+  <section class="screen"    id="scr-atur"></section>
+</main>
+
+<div class="sheet-bg" id="sheet-bg"></div>
+<aside class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Rincian pertemuan"></aside>
+<div class="toast" id="toast">Tersalin</div>
+
+<script>
+/* ============================================================
+   BASIS DATA TOPIK PEKANAN
+   Sumber: Kontrak Kuliah (4 dokumen) + Lampiran Jadwal Praktik
+           CNC 2ABC D3-TM dan CNC 3ABC D4-TMAN
+   Semester Ganjil 2026/2027 — Ir. Muas M., M.T.
+   ============================================================ */
+
+const ROMAWI = ["I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII",
+                "XIII","XIV","XV","XVI","XVII","XVIII"];
+
+/* Helper: bangun daftar pertemuan dari spesifikasi ringkas.
+   spec = [ [dariNo, sampaiNo, judul, isi, bacaan, fase, blokRotasi], ... ] */
+function buatPertemuan(spec) {
+  const out = [];
+  spec.forEach(([a, b, judul, isi, bacaan, fase, blok]) => {
+    for (let n = a; n <= b; n++) {
+      out.push({
+        no: n, romawi: ROMAWI[n - 1],
+        judul, isi, bacaan: bacaan || "–",
+        fase: fase || "reguler",
+        blok: (blok === undefined ? null : blok)
+      });
+    }
+  });
+  return out;
+}
+
+const DATA = {
+
+  /* ---------------------------------------------------------- */
+  cnc_dasar: {
+    id: "cnc_dasar",
+    nama: "Praktik Kerja Mesin Perkakas CNC Dasar",
+    singkat: "CNC Dasar",
+    kode: "341P1740723",
+    prodi: "D-3 Teknik Mesin",
+    semester: "III – Ganjil 2026/2027",
+    tempat: "Laboratorium CNC, Jurusan Teknik Mesin PNUP",
+    tipe: "praktik",
+    jumlahKelompok: 3,
+    jobs: ["TU-2A", "TU-3A", "CAD CAM/Milling Dahlih"],
+    jobWarna: ["j1", "j2", "j3"],
+    /* rotasi[blok][indeksKelompok] = indeks job */
+    rotasi: [
+      [0, 1, 2],
+      [1, 2, 0],
+      [2, 0, 1]
+    ],
+    blokLabel: ["Minggu 3–5", "Minggu 6–8", "Minggu 9–11"],
+    bacaan: [
+      "Buku Petunjuk Praktikum Penggunaan Mesin CNC Bubut Emco TU-2A",
+      "Buku Petunjuk Praktikum Penggunaan Mesin CNC Bubut Emco TU-3A",
+      "Buku Petunjuk Praktikum Penggunaan CAD/CAM dan Mesin CNC Milling Dahlih"
+    ],
+    pertemuan: buatPertemuan([
+      [1, 2, "Pendahuluan",
+        "penjelasan umum kontrak perkuliahan; pengenalan ketiga job praktikum (TU-2A, TU-3A, CAD CAM/Milling Dahlih); pembagian kelompok; penjelasan SOP, K3, dan tata tertib Laboratorium CNC",
+        "–", "pendahuluan"],
+      [3, 5, "Rotasi Job Pertama",
+        "setiap kelompok mengerjakan job pertama sesuai jadwal rotasi (3 pertemuan × 6 jam)",
+        "1, 2, 3", "rotasi", 0],
+      [6, 8, "Rotasi Job Kedua",
+        "setiap kelompok berpindah ke job kedua sesuai jadwal rotasi (3 pertemuan × 6 jam)",
+        "1, 2, 3", "rotasi", 1],
+      [9, 11, "Rotasi Job Ketiga",
+        "setiap kelompok berpindah ke job terakhir sesuai jadwal rotasi (3 pertemuan × 6 jam)",
+        "1, 2, 3", "rotasi", 2],
+      [12, 15, "Penggantian, evaluasi, dan penyelesaian laporan",
+        "perbaikan hasil kerja yang belum memenuhi standar; evaluasi akhir oleh pembimbing masing-masing job; penyelesaian dan pengumpulan laporan praktikum",
+        "1, 2, 3", "penutup"]
+    ]),
+    kelas: {
+      "2A": {
+        kode: "D3TM2A",
+        hari: "Rabu", jam: "07.30–13.50 WITA (jam ke 1–6)",
+        sumberTanggal: "jadwal",
+        tanggal: ["2026-08-19","2026-08-26","2026-09-02","2026-09-09","2026-09-16",
+                  "2026-09-23","2026-09-30","2026-10-07","2026-10-14","2026-10-21",
+                  "2026-10-28","2026-11-04","2026-11-11","2026-11-18","2026-11-25"],
+        pembimbing: [
+          ["TU-2A", "Uswa Khasana Baktiar"],
+          ["TU-3A", "A. Ariputra (Penanggung Jawab)"],
+          ["CAD CAM/Milling Dahlih", "Muas M."]
+        ]
+      },
+      "2B": {
+        kode: "D3TM2B",
+        hari: "Jumat", jam: "07.30–13.50 WITA (jam ke 1–6)",
+        sumberTanggal: "jadwal",
+        tanggal: ["2026-08-21","2026-08-28","2026-09-04","2026-09-11","2026-09-18",
+                  "2026-09-25","2026-10-02","2026-10-09","2026-10-16","2026-10-23",
+                  "2026-10-30","2026-11-06","2026-11-13","2026-11-20","2026-11-27"],
+        pembimbing: [
+          ["TU-2A", "Fauzan Adzima A"],
+          ["TU-3A", "A. Ariputra (Penanggung Jawab)"],
+          ["CAD CAM/Milling Dahlih", "Muas M."]
+        ]
+      },
+      "2C": {
+        kode: "D3TM2C",
+        hari: "Rabu", jam: "13.50–19.50 WITA (jam ke 7–12)",
+        sumberTanggal: "jadwal",
+        tanggal: ["2026-08-19","2026-08-26","2026-09-02","2026-09-09","2026-09-16",
+                  "2026-09-23","2026-09-30","2026-10-07","2026-10-14","2026-10-21",
+                  "2026-10-28","2026-11-04","2026-11-11","2026-11-18","2026-11-25"],
+        pembimbing: [
+          ["TU-2A", "Ismail"],
+          ["TU-3A", "A. Ariputra (Penanggung Jawab)"],
+          ["CAD CAM/Milling Dahlih", "Muas M."]
+        ]
+      }
+    }
+  },
+
+  /* ---------------------------------------------------------- */
+  nc_cnc: {
+    id: "nc_cnc",
+    nama: "Praktik Pemrograman Mesin NC/CNC",
+    singkat: "NC/CNC",
+    kode: "—",
+    prodi: "D-4 Teknik Manufaktur",
+    semester: "V – Ganjil 2026/2027",
+    tempat: "Laboratorium CNC, Jurusan Teknik Mesin PNUP",
+    tipe: "praktik",
+    jumlahKelompok: 4,
+    jobs: ["Mesin CNC Router", "TU-3A Lanjutan", "Swansoft CNC Lanjutan", "CAD CAM-Dahlih Lanjutan"],
+    jobWarna: ["j4", "j2", "j5", "j3"],
+    rotasi: [
+      [0, 1, 2, 3],
+      [1, 2, 3, 0],
+      [2, 3, 0, 1],
+      [3, 0, 1, 2]
+    ],
+    blokLabel: ["Minggu 3–5", "Minggu 6–8", "Minggu 9–11", "Minggu 12–14"],
+    bacaan: [
+      "Buku Petunjuk Praktikum Pengoperasian dan Pemrograman Mesin CNC Router",
+      "Buku Petunjuk Praktikum Penggunaan Mesin CNC Emco TU-3A (Lanjutan)",
+      "Panduan Praktikum Simulasi Pemrograman CNC dengan Swansoft CNC Simulator",
+      "Buku Petunjuk Praktikum Penggunaan CAD/CAM dan Mesin CNC Milling Dahlih (Lanjutan)"
+    ],
+    pertemuan: buatPertemuan([
+      [1, 2, "Pendahuluan",
+        "penjelasan umum kontrak perkuliahan; penjelasan keempat job praktikum (Mesin CNC Router, TU-3A Lanjutan, Swansoft CNC Lanjutan, CAD CAM-Dahlih Lanjutan); pembagian kelompok; penjelasan SOP, K3, dan tata tertib Laboratorium CNC",
+        "–", "pendahuluan"],
+      [3, 5, "Rotasi Job Pertama",
+        "setiap kelompok mengerjakan job pertama sesuai pola rotasi (3 pertemuan)",
+        "1, 2, 3, 4", "rotasi", 0],
+      [6, 8, "Rotasi Job Kedua",
+        "setiap kelompok berpindah ke job kedua sesuai pola rotasi (3 pertemuan)",
+        "1, 2, 3, 4", "rotasi", 1],
+      [9, 11, "Rotasi Job Ketiga",
+        "setiap kelompok berpindah ke job ketiga sesuai pola rotasi (3 pertemuan)",
+        "1, 2, 3, 4", "rotasi", 2],
+      [12, 14, "Rotasi Job Keempat",
+        "setiap kelompok berpindah ke job terakhir sesuai pola rotasi (3 pertemuan)",
+        "1, 2, 3, 4", "rotasi", 3],
+      [15, 15, "Evaluasi dan penyelesaian laporan",
+        "perbaikan hasil kerja yang belum memenuhi standar; evaluasi akhir oleh pembimbing masing-masing job; penyelesaian dan pengumpulan laporan praktikum",
+        "1, 2, 3, 4", "penutup"]
+    ]),
+    kelas: {
+      "3A": {
+        kode: "D4TMA3A",
+        hari: "Selasa", jam: "11.10–19.50 WITA (jam ke 5–12)",
+        sumberTanggal: "jadwal",
+        tanggal: ["2026-08-18","2026-09-01","2026-09-08","2026-09-15","2026-09-22",
+                  "2026-09-29","2026-10-06","2026-10-13","2026-10-20","2026-10-27",
+                  "2026-11-03","2026-11-10","2026-11-17","2026-11-24","2026-12-01"],
+        pembimbing: [
+          ["Mesin CNC Router", "Syaharuddin Rasyid"],
+          ["TU-3A Lanjutan", "Mujahid Ikhlasus Amal"],
+          ["Swansoft CNC Lanjutan", "Abdul Salam"],
+          ["CAD CAM-Dahlih Lanjutan", "Muas M. (Penanggung Jawab)"]
+        ]
+      },
+      "3B": {
+        kode: "D4TMA3B",
+        hari: "Kamis", jam: "11.10–19.50 WITA (jam ke 5–12)",
+        sumberTanggal: "jadwal",
+        tanggal: ["2026-08-20","2026-08-27","2026-09-03","2026-09-10","2026-09-17",
+                  "2026-09-24","2026-10-01","2026-10-08","2026-10-15","2026-10-22",
+                  "2026-10-29","2026-11-05","2026-11-12","2026-11-19","2026-11-26"],
+        pembimbing: [
+          ["Mesin CNC Router", "Syaharuddin Rasyid"],
+          ["TU-3A Lanjutan", "Mujahid Ikhlasus Amal"],
+          ["Swansoft CNC Lanjutan", "Abdul Salam"],
+          ["CAD CAM-Dahlih Lanjutan", "Muas M. (Penanggung Jawab)"]
+        ]
+      },
+      "3C": {
+        kode: "D4TMA3C",
+        hari: "Jumat", jam: "11.10–19.50 WITA (jam ke 5–12)",
+        sumberTanggal: "jadwal",
+        tanggal: ["2026-08-21","2026-08-28","2026-09-04","2026-09-11","2026-09-18",
+                  "2026-09-25","2026-10-02","2026-10-09","2026-10-16","2026-10-23",
+                  "2026-10-30","2026-11-06","2026-11-13","2026-11-20","2026-11-27"],
+        pembimbing: [
+          ["Mesin CNC Router", "Syaharuddin Rasyid"],
+          ["TU-3A Lanjutan", "Mujahid Ikhlasus Amal"],
+          ["Swansoft CNC Lanjutan", "Abdul Salam"],
+          ["CAD CAM-Dahlih Lanjutan", "Muas M. (Penanggung Jawab)"]
+        ]
+      }
+    }
+  },
+
+  /* ---------------------------------------------------------- */
+  ekonomi_teknik: {
+    id: "ekonomi_teknik",
+    nama: "Ekonomi Teknik",
+    singkat: "Ekonomi Teknik",
+    kode: "443P175112",
+    prodi: "D-4 Teknik Manufaktur",
+    semester: "V – Ganjil 2026/2027",
+    tempat: "Ruang kuliah (luring/daring)",
+    tipe: "teori",
+    bacaan: [
+      "Blank, L. & Tarquin, A. (2018). Engineering Economy, 8th Ed. McGraw-Hill",
+      "Pujawan, I.N. (2012). Ekonomi Teknik, Edisi 2. Guna Widya",
+      "Sullivan, W.G., Wicks, E.M. & Koelling, C.P. (2015). Engineering Economy, 16th Ed. Pearson",
+      "Newnan, D.G., Eschenbach, T.G. & Lavelle, J.P. (2017). Engineering Economic Analysis, 13th Ed. Oxford University Press",
+      "Park, C.S. (2019). Contemporary Engineering Economics, 6th Ed. Pearson",
+      "Grant, E.L., Ireson, W.G. & Leavenworth, R.S. (1982). Principles of Engineering Economy, 7th Ed. John Wiley and Sons",
+      "Thuesen, G.J. & Fabrycky, W.J. (2001). Engineering Economy, 9th Ed. Prentice Hall",
+      "Husnan, S. & Suwarsono, M. (2014). Studi Kelayakan Proyek Bisnis. UPP STIM YKPN"
+    ],
+    pertemuan: buatPertemuan([
+      [1,1,"Pendahuluan","penjelasan kontrak perkuliahan, RPS, dan pengenalan umum mata kuliah Ekonomi Teknik","–","pendahuluan"],
+      [2,2,"Konsep Dasar Ekonomi Teknik","definisi, ruang lingkup, konsep nilai waktu uang, bunga sederhana dan majemuk, diagram aliran kas","1, 2"],
+      [3,3,"Faktor-faktor Bunga dan Effective Interest Rate","pembayaran tunggal, seri merata, dan seri tidak merata","1, 3"],
+      [4,4,"Effective Interest Rate (lanjutan)","aplikasi perhitungan bunga pada kasus teknik manufaktur","1, 6, 7"],
+      [5,5,"EUAC dan EUAB","konsep, rumus, dan penerapannya dalam pemilihan alternatif investasi","6, 7"],
+      [6,6,"EUAC dan EUAB (lanjutan)","pemilihan alternatif dengan umur ekonomis berbeda; studi kasus pemilihan mesin/peralatan","1, 6"],
+      [7,7,"Present Worth Analysis","konsep NPV, kriteria keputusan, dan pemilihan alternatif investasi","1, 2, 4"],
+      [8,8,"Present Worth Analysis (lanjutan)","perbandingan alternatif dengan umur berbeda; capitalized cost; studi kasus","3, 5"],
+      [9,9,"Ujian Tengah Semester","","–","ujian"],
+      [10,10,"Rate of Return (RoR) Analysis","konsep IRR, metode perhitungan, dan kriteria keputusan investasi","1, 2"],
+      [11,11,"RoR Analysis (lanjutan) dan pemilihan/penggantian mesin","incremental IRR; analisis ekonomi penggantian peralatan","3, 7"],
+      [12,12,"Benefit-Cost Analysis","konsep B/C ratio, evaluasi proyek pemerintah, incremental B/C ratio","1, 4, 8"],
+      [13,13,"Break-Even Point dan Minimum Cost Analysis","analisis titik pulang pokok, penentuan biaya minimum, analisis sensitivitas","1, 2, 5"],
+      [14,14,"Metode Depresiasi","garis lurus, saldo menurun, jumlah angka tahun, unit produksi; depresiasi untuk tujuan pajak; after-tax analysis","1, 3, 5"],
+      [15,15,"Depresiasi dan Pajak (lanjutan); Inflasi","pengaruh inflasi terhadap analisis investasi; tingkat bunga nominal dan riil","1, 2"],
+      [16,16,"Inflasi (lanjutan)","studi kasus komprehensif yang mengintegrasikan seluruh konsep ekonomi teknik","1, 2, 4"],
+      [17,17,"Ujian Akhir Semester","","–","ujian"]
+    ]),
+    kelas: {
+      "3A": { kode: "D4TMA3A", hari: "Selasa", jam: "07.30–09.10 WITA", sumberTanggal: "hitung", mulai: "2026-08-18" },
+      "3B": { kode: "D4TMA3B", hari: "Senin",  jam: "09.10–11.10 WITA", sumberTanggal: "hitung", mulai: "2026-08-24",
+              catatan: "Pertemuan I diambil 24/08/2026 karena Senin 17/08/2026 bertepatan dengan HUT Kemerdekaan RI. Ubah di Pengaturan bila kelas tetap dimulai 17/08." },
+      "3C": { kode: "D4TMA3C", hari: "Selasa", jam: "09.10–11.10 WITA", sumberTanggal: "hitung", mulai: "2026-08-18" }
+    }
+  },
+
+  /* ---------------------------------------------------------- */
+  matematika: {
+    id: "matematika",
+    nama: "Matematika",
+    singkat: "Matematika",
+    kode: "443J2110512",
+    prodi: "D-4 Teknik Manufaktur (Semester I)",
+    semester: "I – Ganjil 2026/2027",
+    tempat: "Ruang kuliah (luring/daring)",
+    tipe: "teori",
+    bacaan: [
+      "Kreyszig, E. (2011). Advanced Engineering Mathematics, 10th Ed. Wiley",
+      "Chapra, S.C. & Canale, R.P. (2015). Numerical Methods for Engineers, 7th Ed. McGraw-Hill",
+      "Anton, H. & Rorres, C. (2014). Elementary Linear Algebra, 11th Ed. Wiley",
+      "Stroud, K.A. & Booth, D.J. (2013). Engineering Mathematics, 7th Ed. Palgrave Macmillan",
+      "Zill, D.G. & Wright, W.S. (2014). Advanced Engineering Mathematics, 5th Ed. Jones & Bartlett",
+      "Wylie, C.R. & Barrett, L.C. (2012). Advanced Engineering Mathematics, 6th Ed. McGraw-Hill"
+    ],
+    pertemuan: buatPertemuan([
+      [1,1,"Pendahuluan","penjelasan kontrak perkuliahan dan RPS","1","pendahuluan"],
+      [2,2,"Aljabar: Hukum-Hukum Operasi Dasar Aljabar","","1"],
+      [3,3,"Aljabar: Revisi Persamaan-Persamaan","","3"],
+      [4,4,"Aljabar: Revisi Persamaan-Persamaan","","1"],
+      [5,5,"Geometri: Garis dan Segitiga","","4"],
+      [6,6,"Geometri: Jarak, Sudut, Garis Sejajar, dan Segitiga","","4"],
+      [7,7,"Geometri: Segi Empat, Luas dan Keliling Bangun Datar, serta Lingkaran","","6"],
+      [8,8,"Ujian Tengah Semester","","–","ujian"],
+      [9,9,"Trigonometri: Teorema Pythagoras dan perbandingan trigonometri pada segitiga siku-siku","","6"],
+      [10,10,"Trigonometri: Aturan sinus dan cosinus, serta penyelesaian segitiga sembarang","","5"],
+      [11,11,"Trigonometri: Aturan sinus dan cosinus, serta penyelesaian segitiga sembarang","","1"],
+      [12,12,"Trigonometri: Identitas Trigonometri","","4"],
+      [13,13,"Matriks dan Determinan: Operasi matriks","","1"],
+      [14,14,"Matriks dan Determinan: Determinan dan Invers Matriks","","3"],
+      [15,15,"Aplikasi Matriks: Penyelesaian Sistem Persamaan Linear Simultan","","3"],
+      [16,16,"Ujian Akhir Semester","","–","ujian"]
+    ]),
+    kelas: {
+      "1A": { kode: "D4TMA1A", hari: "Senin", jam: "16.50–18.30 WITA", sumberTanggal: "hitung", mulai: "2026-08-24",
+              catatan: "Pertemuan I diambil 24/08/2026 karena Senin 17/08/2026 bertepatan dengan HUT Kemerdekaan RI. Ubah di Pengaturan bila kelas tetap dimulai 17/08." },
+      "1B": { kode: "D4TMA1B", hari: "Kamis", jam: "11.10–13.50 WITA", sumberTanggal: "hitung", mulai: "2026-08-20" },
+      "1C": { kode: "D4TMA1C", hari: "Kamis", jam: "07.30–09.10 WITA", sumberTanggal: "hitung", mulai: "2026-08-20" }
+    }
+  }
+};
+/* ============================================================
+   LOGIKA APLIKASI
+   ============================================================ */
+
+const AWAL_SEMESTER = "2026-08-17";   // Senin, pekan ke-1 akademik
+const HARI = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+const BULAN = ["Januari","Februari","Maret","April","Mei","Juni","Juli",
+               "Agustus","September","Oktober","November","Desember"];
+
+/* ---------- penyimpanan (aman bila localStorage diblokir) ---------- */
+const Simpan = {
+  get(k, d) { try { const v = localStorage.getItem("tp:" + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem("tp:" + k, JSON.stringify(v)); } catch (e) {} },
+  hapusSemua() { try { Object.keys(localStorage).filter(k => k.startsWith("tp:")).forEach(k => localStorage.removeItem(k)); } catch (e) {} }
+};
+
+/* ---------- tanggal ---------- */
+function iso(d) {
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+}
+function dariIso(s) { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d); }
+function hariIni() { const n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate()); }
+function fmtPanjang(s) { const d = dariIso(s); return HARI[d.getDay()] + ", " + d.getDate() + " " + BULAN[d.getMonth()] + " " + d.getFullYear(); }
+function fmtPendek(s) { const d = dariIso(s); return HARI[d.getDay()] + " " + String(d.getDate()).padStart(2, "0") + "/" + String(d.getMonth() + 1).padStart(2, "0") + "/" + d.getFullYear(); }
+function selisihHari(a, b) { return Math.round((dariIso(a) - dariIso(b)) / 86400000); }
+
+function pekanAkademik(isoTgl) {
+  const n = Math.floor(selisihHari(isoTgl, AWAL_SEMESTER) / 7) + 1;
+  return n;
+}
+
+/* ---------- akses data ---------- */
+function daftarMk() { return Object.values(DATA); }
+function mkDari(id) { return DATA[id]; }
+
+function mulaiKelas(mkId, kls) {
+  const k = DATA[mkId].kelas[kls];
+  return Simpan.get("mulai:" + mkId + ":" + kls, k.mulai || null);
+}
+
+/** Kembalikan array tanggal ISO (atau null) sepanjang jumlah pertemuan. */
+function tanggalKelas(mkId, kls) {
+  const mk = DATA[mkId], k = mk.kelas[kls], n = mk.pertemuan.length;
+  if (k.sumberTanggal === "jadwal") return k.tanggal.slice(0, n);
+  const mulai = mulaiKelas(mkId, kls);
+  if (!mulai) return new Array(n).fill(null);
+  const out = [], d0 = dariIso(mulai);
+  for (let i = 0; i < n; i++) {
+    const d = new Date(d0.getFullYear(), d0.getMonth(), d0.getDate() + i * 7);
+    out.push(iso(d));
+  }
+  return out;
+}
+
+function hariKelas(mkId, kls) {
+  const k = DATA[mkId].kelas[kls];
+  if (k.hari) return k.hari;
+  const m = mulaiKelas(mkId, kls);
+  return m ? HARI[dariIso(m).getDay()] : null;
+}
+
+function tanggalPasti(mkId, kls) { return DATA[mkId].kelas[kls].sumberTanggal === "jadwal"; }
+
+/** Indeks pertemuan hari ini / terdekat berikutnya. -1 bila tak ada tanggal. */
+function indeksBerikut(mkId, kls) {
+  const tgl = tanggalKelas(mkId, kls);
+  if (!tgl[0]) return -1;
+  const t = iso(hariIni());
+  for (let i = 0; i < tgl.length; i++) if (tgl[i] >= t) return i;
+  return tgl.length - 1;
+}
+
+/* ---------- penyusunan teks ---------- */
+function topikTeks(p) { return p.isi ? p.judul + ": " + p.isi : p.judul; }
+
+function barisRotasi(mkId, idx) {
+  const mk = DATA[mkId], p = mk.pertemuan[idx];
+  if (p.blok === null || !mk.rotasi) return null;
+  return mk.rotasi[p.blok].map((j, i) => "Kelompok " + (i + 1) + ": " + mk.jobs[j]).join("; ") + ".";
+}
+
+/**
+ * Susun teks siap tempel.
+ * mode: "ringkas" | "standar" | "lengkap"
+ */
+function teksSalin(mkId, kls, idx, mode) {
+  const mk = DATA[mkId], k = mk.kelas[kls], p = mk.pertemuan[idx];
+  const tgl = tanggalKelas(mkId, kls)[idx];
+  const rot = barisRotasi(mkId, idx);
+
+  let inti = topikTeks(p);
+  if (rot) inti += (/[.;:]$/.test(inti) ? " " : ". ") + rot;
+
+  if (mode === "ringkas") return inti;
+
+  const kepala = "Pertemuan " + p.romawi + (tgl ? " (" + fmtPanjang(tgl) + ")" : "") + " — ";
+  if (mode === "standar") return kepala + inti;
+
+  /* lengkap */
+  const baris = [kepala + inti];
+  baris.push("Mata kuliah: " + mk.nama + (mk.kode !== "—" ? " (" + mk.kode + ")" : ""));
+  baris.push("Kelas: " + kls + (k.kode ? " (" + k.kode + ")" : "") + " · " + mk.prodi + " · " + (hariKelas(mkId, kls) || "hari belum ditetapkan") + ", " + k.jam);
+  if (p.bacaan && p.bacaan !== "–") {
+    const nomor = p.bacaan.split(",").map(s => s.trim()).filter(Boolean);
+    baris.push("Bacaan: " + nomor.map(n => n + ") " + (mk.bacaan[Number(n) - 1] || "")).join("; "));
+  }
+  if (rot && k.pembimbing) {
+    baris.push("Pembimbing: " + k.pembimbing.map(x => x[1] + " — " + x[0]).join("; "));
+  }
+  baris.push("Tempat: " + mk.tempat);
+  return baris.join("\n");
+}
+
+/* ---------- salin papan klip ---------- */
+async function salin(teks, tombol) {
+  let ok = false;
+  try { await navigator.clipboard.writeText(teks); ok = true; } catch (e) { ok = false; }
+  if (!ok) {
+    try {
+      const ta = document.createElement("textarea");
+      ta.value = teks;
+      ta.style.cssText = "position:fixed;left:-9999px;top:0";
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      ok = document.execCommand("copy");
+      document.body.removeChild(ta);
+    } catch (e) { ok = false; }
+  }
+  if (ok) {
+    toast("Tersalin — siap ditempel di SIAKAD");
+    if (tombol) {
+      const semula = tombol.textContent;
+      tombol.textContent = "✓ Tersalin";
+      tombol.classList.add("copied");
+      setTimeout(() => { tombol.textContent = semula; tombol.classList.remove("copied"); }, 1600);
+    }
+  } else {
+    toast("Gagal menyalin — tekan lama pada kotak teks lalu salin manual");
+  }
+}
+
+let toastTimer;
+function toast(pesan) {
+  const t = document.getElementById("toast");
+  t.textContent = pesan; t.classList.add("on");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("on"), 2400);
+}
+
+function esc(s) {
+  return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+}
+
+/* ============================================================
+   LAYAR 1 — PEKAN INI
+   ============================================================ */
+function renderBeranda() {
+  const t = iso(hariIni());
+  const kartu = [];
+  const belum = [];
+
+  daftarMk().forEach(mk => {
+    Object.keys(mk.kelas).forEach(kls => {
+      const i = indeksBerikut(mk.id, kls);
+      if (i < 0) { belum.push([mk, kls]); return; }
+      kartu.push({ mk, kls, idx: i, tgl: tanggalKelas(mk.id, kls)[i] });
+    });
+  });
+  kartu.sort((a, b) => (a.tgl || "").localeCompare(b.tgl || ""));
+
+  let h = '<p class="eyebrow">Pertemuan terdekat di setiap kelas</p>';
+
+  if (!kartu.length) h += '<div class="empty">Belum ada kelas yang berjadwal. Buka <b>Pengaturan</b> untuk menetapkan tanggal pertemuan pertama.</div>';
+
+  kartu.forEach(c => {
+    const p = c.mk.pertemuan[c.idx];
+    const d = selisihHari(c.tgl, t);
+    let pill = '<span class="pill soon">' + (d === 1 ? "besok" : d + " hari lagi") + "</span>";
+    if (d === 0) pill = '<span class="pill now">hari ini</span>';
+    else if (d < 0) pill = '<span class="pill done">selesai</span>';
+
+    const rot = barisRotasi(c.mk.id, c.idx);
+    let rotHtml = "";
+    if (rot) {
+      rotHtml = '<div class="rotasi">' + c.mk.rotasi[p.blok].map((j, i) =>
+        '<div class="rot-row"><span class="k">Kelompok ' + (i + 1) + '</span>' +
+        '<span class="swatch ' + c.mk.jobWarna[j] + '"></span>' +
+        '<span>' + esc(c.mk.jobs[j]) + "</span></div>").join("") + "</div>";
+    }
+
+    h += '<article class="card">' +
+      '<div class="card-head">' +
+        '<span class="badge">' + esc(c.kls) + "</span>" +
+        '<div><div class="mk">' + esc(c.mk.singkat) + "</div>" +
+        '<div class="meta">' + esc(fmtPendek(c.tgl)) + (tanggalPasti(c.mk.id, c.kls) ? "" : " ≈") + " · pert. " + p.romawi + "</div></div>" +
+        pill +
+      "</div>" +
+      '<div class="card-body">' +
+        '<div class="topik"><b>' + esc(p.judul) + "</b>" + (p.isi ? ": " + esc(p.isi) : "") + "</div>" +
+        rotHtml +
+        '<div class="actions">' +
+          '<button class="key primary" data-salin="' + c.mk.id + "|" + c.kls + "|" + c.idx + '">Salin untuk SIAKAD</button>' +
+          '<button class="key ghost" data-buka="' + c.mk.id + "|" + c.kls + "|" + c.idx + '">Rincian</button>' +
+        "</div>" +
+      "</div></article>";
+  });
+
+  if (belum.length) {
+    h += '<div class="sect" style="margin-top:26px"><p class="eyebrow">Belum berjadwal</p>';
+    h += '<div class="empty" style="text-align:left">' +
+      belum.map(([mk, kls]) => "<b>" + esc(mk.singkat) + " — kelas " + esc(kls) + "</b>").join("<br>") +
+      '<br><br>Tetapkan tanggal pertemuan I di <b>Pengaturan</b> agar kelas ini ikut muncul di sini. Topiknya tetap bisa dibuka lewat <b>Semua kelas</b>.</div></div>';
+  }
+
+  document.getElementById("scr-beranda").innerHTML = h;
+}
+
+/* ============================================================
+   LAYAR 2 — SEMUA KELAS
+   ============================================================ */
+let pilihMk = "cnc_dasar";
+let pilihKelas = "2A";
+
+function renderKelas() {
+  const mk = mkDari(pilihMk);
+  if (!mk.kelas[pilihKelas]) pilihKelas = Object.keys(mk.kelas)[0];
+  const kls = pilihKelas;
+  const tgl = tanggalKelas(mk.id, kls);
+  const t = iso(hariIni());
+  const berikut = indeksBerikut(mk.id, kls);
+
+  let h = '<p class="eyebrow">Mata kuliah</p><div class="chips">';
+  daftarMk().forEach(m => {
+    h += '<button class="chip" aria-pressed="' + (m.id === pilihMk) + '" data-mk="' + m.id + '">' + esc(m.singkat) + "</button>";
+  });
+  h += "</div>";
+
+  h += '<p class="eyebrow">Kelas</p><div class="chips">';
+  Object.keys(mk.kelas).forEach(k => {
+    h += '<button class="chip" aria-pressed="' + (k === pilihKelas) + '" data-kelas="' + k + '">' + esc(k) + "</button>";
+  });
+  h += "</div>";
+
+  const hr = hariKelas(mk.id, kls);
+  h += '<div class="dro" style="margin:4px 0 16px"><span><span class="lbl">KELAS</span> ' +
+       esc(mk.kelas[kls].kode || kls) +
+       "</span><span>" + esc(hr ? hr + " · " + mk.kelas[kls].jam : mk.kelas[kls].jam) + "</span></div>";
+  if (mk.kelas[kls].catatan) h += '<p class="note">Catatan: ' + esc(mk.kelas[kls].catatan) + "</p>";
+
+  mk.pertemuan.forEach((p, i) => {
+    const d = tgl[i];
+    let kelasRow = "row";
+    if (i === berikut && d && d >= t) kelasRow += " is-now";
+    else if (d && d < t) kelasRow += " is-past";
+    const tglTxt = d ? fmtPendek(d) + (tanggalPasti(mk.id, kls) ? "" : " ≈") : "tanggal belum ditetapkan";
+    h += '<button class="' + kelasRow + '" data-buka="' + mk.id + "|" + kls + "|" + i + '">' +
+      '<span class="num">' + p.romawi + "</span>" +
+      '<span class="txt"><span class="t1">' + esc(p.judul) + "</span>" +
+      '<span class="t2">' + esc(tglTxt) + "</span></span>" +
+      '<span class="arw">›</span></button>';
+  });
+
+  document.getElementById("scr-kelas").innerHTML = h;
+}
+
+/* ============================================================
+   LAYAR 3 — CARI
+   ============================================================ */
+let kataCari = "";
+function renderCari() {
+  let h = '<p class="eyebrow">Cari topik di seluruh mata kuliah</p>' +
+    '<input class="search" id="q" type="search" placeholder="mis. depresiasi, trigonometri, Swansoft" value="' + esc(kataCari) + '">' +
+    '<div style="height:14px"></div><div id="hasil"></div>';
+  document.getElementById("scr-cari").innerHTML = h;
+
+  const inp = document.getElementById("q");
+  inp.addEventListener("input", e => { kataCari = e.target.value; hasilCari(); });
+  hasilCari();
+  if (kataCari) { inp.focus(); inp.setSelectionRange(kataCari.length, kataCari.length); }
+}
+
+function hasilCari() {
+  const q = kataCari.trim().toLowerCase();
+  const box = document.getElementById("hasil");
+  if (!box) return;
+  if (q.length < 2) { box.innerHTML = '<div class="empty">Ketik minimal 2 huruf. Hasil pencarian bisa langsung disalin.</div>'; return; }
+
+  const hit = [];
+  daftarMk().forEach(mk => {
+    const klsPertama = Object.keys(mk.kelas)[0];
+    mk.pertemuan.forEach((p, i) => {
+      const teks = (p.judul + " " + p.isi + " " + mk.nama).toLowerCase();
+      if (teks.includes(q)) hit.push({ mk, kls: klsPertama, i, p });
+    });
+  });
+
+  if (!hit.length) { box.innerHTML = '<div class="empty">Tidak ada topik yang cocok dengan “' + esc(kataCari) + "”.</div>"; return; }
+
+  box.innerHTML = '<p class="eyebrow">' + hit.length + " pertemuan ditemukan</p>" + hit.map(x =>
+    '<button class="row" data-buka="' + x.mk.id + "|" + x.kls + "|" + x.i + '">' +
+    '<span class="num">' + x.p.romawi + "</span>" +
+    '<span class="txt"><span class="t1">' + esc(x.p.judul) + "</span>" +
+    '<span class="t2">' + esc(x.mk.singkat) + "</span></span>" +
+    '<span class="arw">›</span></button>').join("");
+}
+
+/* ============================================================
+   LAYAR 4 — PENGATURAN
+   ============================================================ */
+function renderAtur() {
+  const fmt = Simpan.get("fmt", "ringkas");
+  let h = '<p class="eyebrow">Format tombol salin utama</p>';
+  h += '<div class="set-row"><label for="fmt">Bentuk teks yang disalin<span class="hint">Dipakai tombol “Salin untuk SIAKAD”.</span></label>' +
+    '<select id="fmt">' +
+    '<option value="ringkas"' + (fmt === "ringkas" ? " selected" : "") + ">Ringkas — topik saja</option>" +
+    '<option value="standar"' + (fmt === "standar" ? " selected" : "") + ">Standar — pertemuan, tanggal, topik</option>" +
+    '<option value="lengkap"' + (fmt === "lengkap" ? " selected" : "") + ">Lengkap — beserta bacaan dan pembimbing</option>" +
+    "</select></div>";
+
+  h += '<div class="sect" style="margin-top:26px"><p class="eyebrow">Tanggal pertemuan pertama</p>';
+  h += '<p class="note">Hari dan jam seluruh kelas mengikuti Jadwal Kuliah Semester Ganjil 2026/2027. Kelas praktik CNC memakai tanggal dari lampiran jadwal praktikum sehingga terkunci. Kelas kuliah teori dihitung mingguan dari tanggal pertemuan I — tanda <b>≈</b> menandai tanggal hasil hitungan.</p>';
+
+  daftarMk().forEach(mk => {
+    Object.keys(mk.kelas).forEach(kls => {
+      if (tanggalPasti(mk.id, kls)) return;
+      const val = mulaiKelas(mk.id, kls) || "";
+      h += '<div class="set-row"><label>' + esc(mk.singkat) + " — kelas " + esc(kls) +
+        '<span class="hint">' + esc((hariKelas(mk.id, kls) ? hariKelas(mk.id, kls) + " · " : "") + mk.kelas[kls].jam) + "</span>" +
+        (mk.kelas[kls].catatan ? '<span class="hint note-t">' + esc(mk.kelas[kls].catatan) + "</span>" : "") +
+        "</label>" +
+        '<input type="date" data-mulai="' + mk.id + "|" + kls + '" value="' + val + '"></div>';
+    });
+  });
+  h += "</div>";
+
+  h += '<div class="sect"><p class="eyebrow">Jadwal terkunci</p>';
+  daftarMk().forEach(mk => {
+    Object.keys(mk.kelas).forEach(kls => {
+      if (!tanggalPasti(mk.id, kls)) return;
+      const tgl = tanggalKelas(mk.id, kls);
+      h += '<div class="set-row"><label>' + esc(mk.singkat) + " — kelas " + esc(kls) +
+        (mk.kelas[kls].kode ? " (" + esc(mk.kelas[kls].kode) + ")" : "") +
+        '<span class="hint">' + esc(hariKelas(mk.id, kls) + " · " + mk.kelas[kls].jam) + "</span>" +
+        (mk.kelas[kls].catatan ? '<span class="hint note-t">' + esc(mk.kelas[kls].catatan) + "</span>" : "") +
+        "</label>" +
+        '<span style="font-family:var(--mono);font-size:12px;color:var(--mute)">' +
+        esc(fmtPendek(tgl[0])) + " → " + esc(fmtPendek(tgl[tgl.length - 1])) + "</span></div>";
+    });
+  });
+  h += "</div>";
+
+  h += '<div class="actions"><button class="key ghost" id="reset">Kembalikan pengaturan awal</button></div>';
+  h += '<p class="note" style="margin-top:24px">Topik bahasan bersumber dari Kontrak Kuliah CNC Dasar, Praktik Pemrograman Mesin NC/CNC, Ekonomi Teknik, dan Matematika. Hari dan jam bersumber dari Jadwal Kuliah Semester Ganjil 2026/2027. Tanggal praktik CNC bersumber dari lampiran Jadwal Praktik CNC 2A/2B/2C dan 3A/3B/3C. Aplikasi bekerja penuh tanpa koneksi internet.</p>';
+
+  document.getElementById("scr-atur").innerHTML = h;
+
+  document.getElementById("fmt").addEventListener("change", e => { Simpan.set("fmt", e.target.value); toast("Format salin diperbarui"); });
+  document.querySelectorAll("[data-mulai]").forEach(el => {
+    el.addEventListener("change", e => {
+      const [mkId, kls] = el.dataset.mulai.split("|");
+      if (e.target.value) Simpan.set("mulai:" + mkId + ":" + kls, e.target.value);
+      else Simpan.set("mulai:" + mkId + ":" + kls, null);
+      renderBeranda(); renderKelas();
+      toast("Tanggal kelas " + kls + " diperbarui");
+    });
+  });
+  document.getElementById("reset").addEventListener("click", () => {
+    Simpan.hapusSemua(); renderSemua(); toast("Pengaturan dikembalikan");
+  });
+}
+
+/* ============================================================
+   PANEL RINCIAN
+   ============================================================ */
+let sheetState = null;
+
+function bukaSheet(mkId, kls, idx) {
+  sheetState = { mkId, kls, idx: Number(idx) };
+  gambarSheet();
+  document.getElementById("sheet-bg").classList.add("on");
+  requestAnimationFrame(() => document.getElementById("sheet").classList.add("on"));
+}
+function tutupSheet() {
+  document.getElementById("sheet").classList.remove("on");
+  document.getElementById("sheet-bg").classList.remove("on");
+}
+
+function gambarSheet() {
+  const { mkId, kls, idx } = sheetState;
+  const mk = mkDari(mkId), k = mk.kelas[kls], p = mk.pertemuan[idx];
+  const tgl = tanggalKelas(mkId, kls)[idx];
+  const fmt = Simpan.get("fmt", "ringkas");
+  const rot = barisRotasi(mkId, idx);
+
+  let h = '<div class="sheet-head"><div class="grip"></div>' +
+    '<div class="sh-meta">' + esc(mk.singkat.toUpperCase()) + " · PERTEMUAN " + p.romawi + "</div>" +
+    "<h2>" + esc(p.judul) + "</h2>" +
+    '<div class="sh-meta">' + esc(tgl ? fmtPanjang(tgl) + (tanggalPasti(mkId, kls) ? "" : "  ≈ perkiraan") : "tanggal belum ditetapkan") + "</div></div>";
+
+  h += '<div class="chips" style="margin-top:12px">';
+  Object.keys(mk.kelas).forEach(x => {
+    h += '<button class="chip" aria-pressed="' + (x === kls) + '" data-sheetkelas="' + x + '">Kelas ' + esc(x) + "</button>";
+  });
+  h += "</div>";
+
+  if (p.isi) h += '<div class="topik" style="margin-top:4px">' + esc(p.isi) + "</div>";
+
+  if (rot) {
+    h += '<div class="rotasi">' + mk.rotasi[p.blok].map((j, i) =>
+      '<div class="rot-row"><span class="k">Kelompok ' + (i + 1) + '</span>' +
+      '<span class="swatch ' + mk.jobWarna[j] + '"></span><span>' + esc(mk.jobs[j]) + "</span></div>").join("") + "</div>";
+  }
+
+  h += '<dl class="kv">';
+  h += "<dt>Kelas</dt><dd>" + esc(kls + (k.kode ? " (" + k.kode + ")" : "") + " · " + mk.prodi) + "</dd>";
+  h += "<dt>Jadwal</dt><dd>" + esc((hariKelas(mkId, kls) || "—") + ", " + k.jam) + "</dd>";
+  if (p.bacaan && p.bacaan !== "–") {
+    const nomor = p.bacaan.split(",").map(s => s.trim()).filter(Boolean);
+    h += "<dt>Bacaan</dt><dd>" + nomor.map(n => esc(mk.bacaan[Number(n) - 1] || n)).join("<br>") + "</dd>";
+  }
+  if (rot && k.pembimbing) {
+    h += "<dt>Pembimbing</dt><dd>" + k.pembimbing.map(x => esc(x[1] + " — " + x[0])).join("<br>") + "</dd>";
+  }
+  h += "<dt>Tempat</dt><dd>" + esc(mk.tempat) + "</dd>";
+  h += "</dl>";
+  if (k.catatan) h += '<p class="note">Catatan: ' + esc(k.catatan) + "</p>";
+
+  h += '<p class="eyebrow" style="margin-top:20px">Teks siap tempel</p>';
+  h += '<div class="chips">' +
+    ["ringkas", "standar", "lengkap"].map(m =>
+      '<button class="chip" aria-pressed="' + (m === fmt) + '" data-fmt="' + m + '">' +
+      m.charAt(0).toUpperCase() + m.slice(1) + "</button>").join("") + "</div>";
+  h += '<div class="preview" id="pratinjau">' + esc(teksSalin(mkId, kls, idx, fmt)) + "</div>";
+
+  h += '<div class="actions">' +
+    '<button class="key primary" id="salin-utama">Salin</button>' +
+    (idx > 0 ? '<button class="key" data-geser="-1">‹ Sebelumnya</button>' : "") +
+    (idx < mk.pertemuan.length - 1 ? '<button class="key" data-geser="1">Berikutnya ›</button>' : "") +
+    '<button class="key ghost" id="tutup">Tutup</button>' +
+    "</div>";
+
+  const s = document.getElementById("sheet");
+  s.innerHTML = h;
+  s.scrollTop = 0;
+
+  s.querySelectorAll("[data-sheetkelas]").forEach(b => b.addEventListener("click", () => {
+    sheetState.kls = b.dataset.sheetkelas; gambarSheet();
+  }));
+  s.querySelectorAll("[data-fmt]").forEach(b => b.addEventListener("click", () => {
+    Simpan.set("fmt", b.dataset.fmt); gambarSheet();
+  }));
+  s.querySelectorAll("[data-geser]").forEach(b => b.addEventListener("click", () => {
+    sheetState.idx += Number(b.dataset.geser); gambarSheet();
+  }));
+  s.querySelector("#tutup").addEventListener("click", tutupSheet);
+  s.querySelector("#salin-utama").addEventListener("click", e => {
+    salin(teksSalin(sheetState.mkId, sheetState.kls, sheetState.idx, Simpan.get("fmt", "ringkas")), e.currentTarget);
+  });
+}
+
+/* ============================================================
+   PENGABELAN & MULAI
+   ============================================================ */
+function renderSemua() { renderBeranda(); renderKelas(); renderCari(); renderAtur(); }
+
+function pasangDro() {
+  const t = iso(hariIni());
+  document.getElementById("dro-tgl").textContent = fmtPendek(t);
+  const p = pekanAkademik(t);
+  document.getElementById("dro-pekan").textContent = (p < 1 ? "pra-semester" : (p > 20 ? "pasca-semester" : String(p).padStart(2, "0")));
+}
+
+document.addEventListener("click", e => {
+  const tab = e.target.closest(".tab");
+  if (tab) {
+    document.querySelectorAll(".tab").forEach(x => x.setAttribute("aria-selected", x === tab));
+    document.querySelectorAll(".screen").forEach(s => s.classList.remove("on"));
+    document.getElementById("scr-" + tab.dataset.scr).classList.add("on");
+    window.scrollTo({ top: 0, behavior: "instant" });
+    return;
+  }
+  const buka = e.target.closest("[data-buka]");
+  if (buka) { const [a, b, c] = buka.dataset.buka.split("|"); bukaSheet(a, b, c); return; }
+
+  const cp = e.target.closest("[data-salin]");
+  if (cp) {
+    const [a, b, c] = cp.dataset.salin.split("|");
+    salin(teksSalin(a, b, Number(c), Simpan.get("fmt", "ringkas")), cp);
+    return;
+  }
+  const cm = e.target.closest("[data-mk]");
+  if (cm) { pilihMk = cm.dataset.mk; pilihKelas = Object.keys(DATA[pilihMk].kelas)[0]; renderKelas(); return; }
+
+  const ck = e.target.closest("[data-kelas]");
+  if (ck) { pilihKelas = ck.dataset.kelas; renderKelas(); return; }
+
+  if (e.target.id === "sheet-bg") tutupSheet();
+});
+
+document.addEventListener("keydown", e => { if (e.key === "Escape") tutupSheet(); });
+
+pasangDro();
+renderSemua();
+
+</script>
+</body>
+</html>
