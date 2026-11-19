@@ -116,7 +116,7 @@
       chips:["Sambungan","Tumpuan (ID/EN)","Transmisi daya","Pengereman","Pegas & roda gila","Rangka & bejana tekan","Perapat & pelumasan","Toleransi & suaian","Gerak linear","Shear pin & relief valve","Excavator (ID/EN)"],
       who:"Mahasiswa", isi:"11 virtual lab + versi alternatif",
       url:"https://muasmuchtar.github.io/virtual-lab-elemen-mesin/", repo:"https://github.com/muasmuchtar/virtual-lab-elemen-mesin",
-      extra:[["🏗️ Supports Lab (English)","https://muasmuchtar.github.io/virtual-lab-elemen-mesin/lab/02-tumpuan-ringkas-en.html"],["🚜 Excavator (English)","https://muasmuchtar.github.io/virtual-lab-elemen-mesin/lab/11-excavator-en.html"]]
+      extra:[["🏗️ Supports Lab (English)","https://muasmuchtar.github.io/virtual-lab-elemen-mesin/lab/02-tumpuan-ringkas-en.html","en"],["🚜 Excavator (English)","https://muasmuchtar.github.io/virtual-lab-elemen-mesin/lab/11-excavator-en.html","en"],["🛡️ Shear Pin (versi ringkas)","https://muasmuchtar.github.io/virtual-lab-elemen-mesin/lab/10-shear-pin-versi-ringkas.html"]]
     },
     {
       cls:"b1", ico:"⚙️", title:"Kalkulator Teknik Manufaktur", sub:"Teknik Mesin & Teknik Manufaktur",
@@ -159,7 +159,7 @@
         <div class="meta"><span>Untuk: <b>${s.who}</b></span><span>Isi: <b>${s.isi}</b></span></div>
         <div class="actions">
           <a class="btn btn-main" href="${s.url}">Buka situs →</a>
-          ${(s.extra||[]).map(([label,href])=>`<a class="btn btn-ghost" href="${href}" lang="en">${label}</a>`).join("")}
+          ${(s.extra||[]).map(([label,href,lang])=>`<a class="btn btn-ghost" href="${href}"${lang?` lang="${lang}"`:""}>${label}</a>`).join("")}
           <a class="btn btn-ghost" href="${s.repo}" target="_blank" rel="noopener">Kode di GitHub</a>
         </div>
       </div>`;
