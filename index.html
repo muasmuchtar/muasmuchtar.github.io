@@ -119,7 +119,7 @@
       chips:["Nilai waktu uang","Evaluasi investasi","Break-even","Depresiasi","Inflasi","Arus kas setelah pajak","Sensitivitas & risiko","Obligasi","BCR","Lease vs buy","Penggantian aset","Kalkulator suku bunga"],
       who:"Mahasiswa", isi:"12 modul + PDF materi + kalkulator suku bunga",
       url:"https://muasmuchtar.github.io/virtual-lab-ekotek/", repo:"https://github.com/muasmuchtar/virtual-lab-ekotek",
-      pdfBase:"https://muasmuchtar.github.io/virtual-lab-ekotek/pdf/",
+      pdfBase:"https://muasmuchtar.github.io/virtual-lab-ekotek/pdf/", pdfNote:"PDF Modul 07 menyusul.",
       pdfs:[["01","Nilai Waktu Uang","Modul_1_Nilai_Waktu_Uang_Ekonomi_Teknik.pdf"],["02","Evaluasi Investasi Tunggal","Modul_2_Evaluasi_Investasi_Tunggal_Ekonomi_Teknik.pdf"],["03","Perbandingan Alternatif Investasi","Modul_3_Perbandingan_Alternatif_Investasi_Ekonomi_Teknik.pdf"],["04","Analisis Break-Even","Modul_4_Analisis_Break_Even_Ekonomi_Teknik.pdf"],["05","Depresiasi dan Nilai Buku","Modul_5_Depresiasi_dan_Nilai_Buku_Ekonomi_Teknik.pdf"],["06","Pengaruh Inflasi","Modul_6_Pengaruh_Inflasi_Ekonomi_Teknik.pdf"],["08","Analisis Sensitivitas dan Risiko","Modul_8_Analisis_Sensitivitas_dan_Risiko_Ekonomi_Teknik.pdf"],["09","Valuasi Obligasi","Modul_9_Valuasi_Obligasi_Ekonomi_Teknik.pdf"],["10","BCR Proyek Publik","Modul_10_BCR_Proyek_Publik_Ekonomi_Teknik.pdf"],["11","Lease vs Buy / Make vs Buy","Modul_11_Lease_vs_Buy_Make_vs_Buy_Ekonomi_Teknik.pdf"],["12","Analisis Penggantian Aset","Modul_12_Analisis_Penggantian_Aset_Ekonomi_Teknik.pdf"]],
       extra:[["📄 Panduan Prasyarat (PDF)","https://muasmuchtar.github.io/virtual-lab-ekotek/pdf/Panduan_Prasyarat_Penggunaan_Virtual_Lab_Ekonomi_Teknik_Untuk_Mahasiswa.pdf"],["🧮 Kalkulator Suku Bunga","https://muasmuchtar.github.io/virtual-lab-ekotek/alat/kalkulator-suku-bunga.html"]]
     },
@@ -157,7 +157,9 @@
       desc:"Ringkasan berbahasa Indonesia dari video tutorial CapCut dan pembuatan video AI, lengkap dengan langkah praktik dan tautan ke menit video aslinya.",
       chips:["15 trik CapCut gratis","Isolate Voice","7 trik CapCut","Video AI gaya VOX","Versi PDF"],
       who:"Mahasiswa", isi:"3 ringkasan + PDF",
-      url:"https://muasmuchtar.github.io/panduan-editing-video/", repo:"https://github.com/muasmuchtar/panduan-editing-video"
+      url:"https://muasmuchtar.github.io/panduan-editing-video/", repo:"https://github.com/muasmuchtar/panduan-editing-video",
+      pdfLabel:"PDF Ringkasan", pdfBase:"https://muasmuchtar.github.io/panduan-editing-video/",
+      pdfs:[["","🎬 15 Trik CapCut Gratis & Isolate Voice","capcut-15-trik/panduan-capcut-15-trik.pdf"],["","✨ 7 Trik CapCut","capcut-7-trik/ringkasan-7-trik-capcut.pdf"],["","🤖 Video AI Gaya VOX","video-ai-vox/ringkasan-video-ai-vox.pdf"]]
     }
   ];
   const grid = document.getElementById("grid");
@@ -170,9 +172,9 @@
         <p>${s.desc}</p>
         <div class="chips">${s.chips.map(c=>`<span>${c}</span>`).join("")}</div>
         <div class="meta"><span>Untuk: <b>${s.who}</b></span><span>Isi: <b>${s.isi}</b></span></div>
-        ${s.pdfs ? `<details class="pdfs"><summary>📚 PDF Modul (${s.pdfs.length} file)</summary>
-          <ul>${s.pdfs.map(([n,t,f])=>`<li><a href="${s.pdfBase}${f}" target="_blank" rel="noopener"><b>Modul ${n}</b> ${t}</a></li>`).join("")}</ul>
-          <small>PDF Modul 07 menyusul.</small></details>` : ""}
+        ${s.pdfs ? `<details class="pdfs"><summary>📚 ${s.pdfLabel||"PDF Modul"} (${s.pdfs.length} file)</summary>
+          <ul>${s.pdfs.map(([n,t,f])=>`<li><a href="${s.pdfBase}${f}" target="_blank" rel="noopener">${n?`<b>${s.pdfPrefix??"Modul "}${n}</b> `:""}${t}</a></li>`).join("")}</ul>
+          ${s.pdfNote?`<small>${s.pdfNote}</small>`:`<div style="height:6px"></div>`}</details>` : ""}
         <div class="actions">
           <a class="btn btn-main" href="${s.url}">Buka situs →</a>
           ${(s.extra||[]).map(([label,href,lang])=>`<a class="btn btn-ghost" href="${href}"${lang?` lang="${lang}"`:""}>${label}</a>`).join("")}
