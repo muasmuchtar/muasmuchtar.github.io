@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muas Muchtar · Portofolio</title>
+<meta name="description" content="Portofolio media pembelajaran interaktif Muas Muchtar, Politeknik Negeri Ujung Pandang: kalkulator teknik, virtual lab ekonomi teknik, dasbor matematika, dan kalkulator nilai CAD/CAM.">
+<meta property="og:title" content="Muas Muchtar · Portofolio Media Pembelajaran">
+<meta property="og:description" content="Media pembelajaran interaktif untuk Teknik Mesin dan Teknik Manufaktur PNUP.">
+<meta property="og:image" content="https://github.com/muasmuchtar.png">
+<style>
+  :root{
+    --bg:#F3F5F9; --panel:#FFFFFF; --ink:#18213A; --soft:#5E6A82; --line:#DDE3EC;
+    --navy:#14284B; --navy2:#1F3F73; --yellow:#F5B700; --cyan:#12A4C4; --chip:#EEF2F8;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#0F1524; --panel:#18213A; --ink:#E8ECF4; --soft:#A3AEC4; --line:#2A3654; --chip:#22304F; }
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.55;}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 16px;}
+
+  header{background:linear-gradient(120deg,var(--navy),var(--navy2));color:#fff;padding:44px 16px 64px;}
+  header .wrap{display:flex;gap:22px;align-items:center;flex-wrap:wrap;padding:0;}
+  .avatar{width:104px;height:104px;border-radius:50%;border:4px solid rgba(255,255,255,.85);object-fit:cover;background:#2A4472;flex:0 0 auto;}
+  .who{flex:1;min-width:240px;}
+  .tag{display:inline-block;background:var(--yellow);color:#2B2100;font-weight:800;font-size:11.5px;letter-spacing:.06em;padding:4px 10px;border-radius:20px;text-transform:uppercase;}
+  h1{margin:10px 0 4px;font-size:clamp(26px,4.5vw,38px);line-height:1.15;}
+  .who p{margin:0;color:#C8D3EA;font-size:15px;max-width:620px;}
+  .links{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+  .links a{color:#fff;text-decoration:none;font-size:13px;font-weight:700;padding:7px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.08);}
+  .links a:hover{background:rgba(255,255,255,.18);}
+
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:-34px auto 30px;}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center;box-shadow:0 6px 20px rgba(20,40,75,.07);}
+  .stat b{display:block;font-size:26px;color:var(--navy2);font-family:"SFMono-Regular",Consolas,monospace;line-height:1.1;}
+  @media (prefers-color-scheme: dark){ .stat b{color:var(--yellow);} }
+  .stat span{font-size:12px;color:var(--soft);font-weight:600;}
+  @media (max-width:640px){ .stats{grid-template-columns:repeat(2,1fr);} }
+
+  h2.sec{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--soft);margin:0 0 12px;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(440px,1fr));gap:16px;margin-bottom:34px;}
+  @media (max-width:520px){ .grid{grid-template-columns:1fr;} }
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;transition:transform .12s,border-color .12s,box-shadow .12s;}
+  .card:hover{transform:translateY(-3px);border-color:var(--cyan);box-shadow:0 10px 26px rgba(20,40,75,.10);}
+  .band{padding:18px 18px 16px;color:#fff;display:flex;gap:14px;align-items:center;}
+  .band .ico{font-size:30px;line-height:1;width:52px;height:52px;border-radius:12px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
+  .band h3{margin:0;font-size:18px;line-height:1.25;}
+  .band small{display:block;font-size:12px;opacity:.85;margin-top:2px;}
+  .b1{background:linear-gradient(120deg,#1F3F73,#2E5FA8);}
+  .b2{background:linear-gradient(120deg,#0E7490,#12A4C4);}
+  .b3{background:linear-gradient(120deg,#4C2C8F,#7148C4);}
+  .b4{background:linear-gradient(120deg,#9A5B00,#D18A00);}
+  .body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:12px;flex:1;}
+  .body p{margin:0;font-size:14px;color:var(--soft);}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;}
+  .chips span{font-size:12px;background:var(--chip);color:var(--soft);padding:3px 9px;border-radius:20px;}
+  .meta{font-size:12px;color:var(--soft);display:flex;gap:6px 14px;flex-wrap:wrap;}
+  .meta b{color:var(--ink);font-weight:700;}
+  .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;}
+  .btn{display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-weight:700;font-size:13.5px;padding:9px 14px;border-radius:8px;}
+  .btn-main{background:var(--cyan);color:#fff;}
+  .btn-ghost{border:1px solid var(--line);color:var(--ink);}
+
+  footer{border-top:1px solid var(--line);padding:18px 0 40px;font-size:12.5px;color:var(--soft);}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <img class="avatar" src="https://github.com/muasmuchtar.png?size=208" alt="Foto Muas Muchtar">
+    <div class="who">
+      <span class="tag">Politeknik Negeri Ujung Pandang</span>
+      <h1>Muas Muchtar</h1>
+      <p>Pengajar di Politeknik Negeri Ujung Pandang sejak 1993. Halaman ini memuat media pembelajaran interaktif yang saya kembangkan untuk mata kuliah Teknik Mesin dan Teknik Manufaktur.</p>
+      <div class="links">
+        <a href="https://github.com/muasmuchtar" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.poliupg.ac.id/" target="_blank" rel="noopener">poliupg.ac.id</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="stats" aria-label="Ringkasan">
+    <div class="stat"><b>4</b><span>Situs pembelajaran</span></div>
+    <div class="stat"><b>12</b><span>Modul virtual lab</span></div>
+    <div class="stat"><b>6</b><span>Kalkulator teknik</span></div>
+    <div class="stat"><b>3</b><span>Dasbor matematika</span></div>
+  </section>
+
+  <h2 class="sec">Media pembelajaran</h2>
+  <section class="grid" id="grid"></section>
+</main>
+
+<footer class="wrap">
+  © 2026 Muas Muchtar · Politeknik Negeri Ujung Pandang.<br>
+  Semua aplikasi berjalan di browser pengguna; tidak ada data yang dikirim ke server.
+</footer>
+
+<script>
+  const SITES = [
+    {
+      cls:"b2", ico:"🧪", title:"Virtual Lab Ekonomi Teknik", sub:"Ekonomi Teknik · D4 Teknik Manufaktur",
+      desc:"Dua belas modul praktikum interaktif dengan Learning Assistant. Setiap modul dibuka dengan halaman prasyarat, lalu mahasiswa berlatih di simulator.",
+      chips:["Nilai waktu uang","Evaluasi investasi","Break-even","Depresiasi","Inflasi","Arus kas setelah pajak","Sensitivitas & risiko","Obligasi","BCR","Lease vs buy","Penggantian aset"],
+      who:"Mahasiswa", isi:"12 modul + PDF materi",
+      url:"https://muasmuchtar.github.io/virtual-lab-ekotek/", repo:"https://github.com/muasmuchtar/virtual-lab-ekotek"
+    },
+    {
+      cls:"b1", ico:"⚙️", title:"Kalkulator Teknik Manufaktur", sub:"Teknik Mesin & Teknik Manufaktur",
+      desc:"Enam kalkulator untuk perhitungan praktikum dan tugas, lengkap dengan rumus yang dipakai di setiap hasil.",
+      chips:["Pemesinan CNC","Elemen mesin","Material & mekanika","Kualitas & statistik","Ekonomi produksi","Proses manufaktur khusus"],
+      who:"Mahasiswa", isi:"6 kalkulator",
+      url:"https://muasmuchtar.github.io/kalkulator-teknik/", repo:"https://github.com/muasmuchtar/kalkulator-teknik"
+    },
+    {
+      cls:"b3", ico:"📐", title:"Dasbor Matematika Teknik", sub:"Matematika · D4 Teknik Manufaktur",
+      desc:"Dasbor materi per pertemuan berisi penjelasan konsep, contoh soal terurai, dan latihan mandiri.",
+      chips:["Hukum indeks","Operasi aljabar","Faktorisasi","BODMAS","Persamaan linear","Persamaan simultan","Persamaan kuadrat"],
+      who:"Mahasiswa", isi:"3 dasbor (Pertemuan 2–3)",
+      url:"https://muasmuchtar.github.io/dasbor-matematika/", repo:"https://github.com/muasmuchtar/dasbor-matematika"
+    },
+    {
+      cls:"b4", ico:"🧮", title:"Kalkulator Nilai CAD/CAM", sub:"Praktik CNC · D3 Teknik Mesin",
+      desc:"Alat penilaian praktikum CAD/CAM berbasis capaian dan faktor koreksi kesalahan, dengan pencatatan urutan selesai per kelompok.",
+      chips:["Analisa 5% · CAD 35% · CAM 60%","Skema 2 atau 4 tugas","Urutan selesai per kelompok","Import/Export JSON"],
+      who:"Dosen & pembimbing", isi:"1 aplikasi penilaian",
+      url:"https://muasmuchtar.github.io/kalkulator-nilai-cadcam/", repo:"https://github.com/muasmuchtar/kalkulator-nilai-cadcam"
+    }
+  ];
+  const grid = document.getElementById("grid");
+  SITES.forEach(s=>{
+    const el = document.createElement("article");
+    el.className = "card";
+    el.innerHTML = `
+      <div class="band ${s.cls}"><span class="ico">${s.ico}</span><div><h3>${s.title}</h3><small>${s.sub}</small></div></div>
+      <div class="body">
+        <p>${s.desc}</p>
+        <div class="chips">${s.chips.map(c=>`<span>${c}</span>`).join("")}</div>
+        <div class="meta"><span>Untuk: <b>${s.who}</b></span><span>Isi: <b>${s.isi}</b></span></div>
+        <div class="actions">
+          <a class="btn btn-main" href="${s.url}">Buka situs →</a>
+          <a class="btn btn-ghost" href="${s.repo}" target="_blank" rel="noopener">Kode di GitHub</a>
+        </div>
+      </div>`;
+    grid.appendChild(el);
+  });
+</script>
+</body>
+</html>
