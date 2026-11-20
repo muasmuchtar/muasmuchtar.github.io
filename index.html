@@ -58,6 +58,7 @@
   .b9{background:linear-gradient(120deg,#5B2A86,#8E4FC0);}
   .b10{background:linear-gradient(120deg,#5A3E1B,#8C6A2E);}
   .b11{background:linear-gradient(120deg,#1E3A5F,#2F6690);}
+  .b12{background:linear-gradient(120deg,#3D4A1F,#6B7F2A);}
   .body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:12px;flex:1;}
   .body p{margin:0;font-size:14px;color:var(--soft);}
   .chips{display:flex;flex-wrap:wrap;gap:6px;}
@@ -107,7 +108,7 @@
 
 <main class="wrap">
   <section class="stats" aria-label="Ringkasan">
-    <div class="stat"><b>10</b><span>Situs pembelajaran</span></div>
+    <div class="stat"><b>12</b><span>Situs pembelajaran</span></div>
     <div class="stat"><b>270</b><span>Virtual lab & simulator</span></div>
     <div class="stat"><b>6</b><span>Kalkulator teknik</span></div>
     <div class="stat"><b>13</b><span>Dasbor matematika</span></div>
@@ -140,11 +141,11 @@
       cls:"b2", ico:"🧪", title:"Virtual Lab Ekonomi Teknik", sub:"Ekonomi Teknik · D4 Teknik Manufaktur",
       desc:"Dua belas modul praktikum interaktif dengan Learning Assistant. Setiap modul dibuka dengan halaman prasyarat, lalu mahasiswa berlatih di simulator. Dilengkapi Kalkulator Suku Bunga Fungsional sebagai alat bantu.",
       chips:["Nilai waktu uang","Evaluasi investasi","Break-even","Depresiasi","Inflasi","Arus kas setelah pajak","Sensitivitas & risiko","Obligasi","BCR","Lease vs buy","Penggantian aset","Kalkulator suku bunga"],
-      who:"Mahasiswa", isi:"13 materi kuliah + 12 modul lab (2 versi) + PDF + kalkulator suku bunga",
+      who:"Mahasiswa", isi:"13 materi kuliah + 12 modul lab (2 versi) + 38 slide & 19 bahan ajar PDF + kalkulator",
       url:"https://muasmuchtar.github.io/virtual-lab-ekotek/", repo:"https://github.com/muasmuchtar/virtual-lab-ekotek",
       pdfBase:"https://muasmuchtar.github.io/virtual-lab-ekotek/pdf/", pdfNote:"PDF Modul 07 menyusul.",
       pdfs:[["01","Nilai Waktu Uang","Modul_1_Nilai_Waktu_Uang_Ekonomi_Teknik.pdf"],["02","Evaluasi Investasi Tunggal","Modul_2_Evaluasi_Investasi_Tunggal_Ekonomi_Teknik.pdf"],["03","Perbandingan Alternatif Investasi","Modul_3_Perbandingan_Alternatif_Investasi_Ekonomi_Teknik.pdf"],["04","Analisis Break-Even","Modul_4_Analisis_Break_Even_Ekonomi_Teknik.pdf"],["05","Depresiasi dan Nilai Buku","Modul_5_Depresiasi_dan_Nilai_Buku_Ekonomi_Teknik.pdf"],["06","Pengaruh Inflasi","Modul_6_Pengaruh_Inflasi_Ekonomi_Teknik.pdf"],["08","Analisis Sensitivitas dan Risiko","Modul_8_Analisis_Sensitivitas_dan_Risiko_Ekonomi_Teknik.pdf"],["09","Valuasi Obligasi","Modul_9_Valuasi_Obligasi_Ekonomi_Teknik.pdf"],["10","BCR Proyek Publik","Modul_10_BCR_Proyek_Publik_Ekonomi_Teknik.pdf"],["11","Lease vs Buy / Make vs Buy","Modul_11_Lease_vs_Buy_Make_vs_Buy_Ekonomi_Teknik.pdf"],["12","Analisis Penggantian Aset","Modul_12_Analisis_Penggantian_Aset_Ekonomi_Teknik.pdf"]],
-      extra:[["📖 Materi Kuliah","https://muasmuchtar.github.io/virtual-lab-ekotek/#materi"],["📄 Panduan Prasyarat (PDF)","https://muasmuchtar.github.io/virtual-lab-ekotek/pdf/Panduan_Prasyarat_Penggunaan_Virtual_Lab_Ekonomi_Teknik_Untuk_Mahasiswa.pdf"],["🧮 Kalkulator Suku Bunga","https://muasmuchtar.github.io/virtual-lab-ekotek/alat/kalkulator-suku-bunga.html"],["📘 Master Learning Assistant","https://muasmuchtar.github.io/virtual-lab-ekotek/learning-assistant/master-12-modul.html"]]
+      extra:[["📖 Materi Kuliah","https://muasmuchtar.github.io/virtual-lab-ekotek/#materi"],["🖼️ Slide & Bahan Ajar (Kluster A/B)","https://muasmuchtar.github.io/virtual-lab-ekotek/kuliah/"],["📄 Panduan Prasyarat (PDF)","https://muasmuchtar.github.io/virtual-lab-ekotek/pdf/Panduan_Prasyarat_Penggunaan_Virtual_Lab_Ekonomi_Teknik_Untuk_Mahasiswa.pdf"],["🧮 Kalkulator Suku Bunga","https://muasmuchtar.github.io/virtual-lab-ekotek/alat/kalkulator-suku-bunga.html"],["📘 Master Learning Assistant","https://muasmuchtar.github.io/virtual-lab-ekotek/learning-assistant/master-12-modul.html"]]
     },
     {
       cls:"b6", ico:"🔩", title:"Virtual Lab Elemen Mesin", sub:"Elemen Mesin · Mekanika Teknik",
@@ -194,10 +195,25 @@
     },
     {
       cls:"b11", ico:"🖥️", title:"Teknologi CAD CAM", sub:"CAD/CAM · D4 Teknik Manufaktur",
-      desc:"Delapan belas topik dari sejarah CAD/CAM, perangkat keras dan lunak, standar pertukaran data, pemodelan geometri, hingga manufaktur aditif dan PLM.",
-      chips:["Sejarah CAD/CAM","Perangkat keras","Standar IGES/STEP/DXF","CSG","Wireframe & surface","Solid & parametrik","Manufaktur aditif","PLM"],
-      who:"Mahasiswa", isi:"18 topik (PDF)",
+      desc:"Slide kuliah 2026 untuk 14 pertemuan, dari pemodelan parametrik, CAM 2.5- dan 3-axis, simulasi dan postprocessing, sampai AI-assisted CAM dan digital twin. Ditambah seri 18 topik dari sejarah CAD/CAM hingga PLM.",
+      chips:["Parametric modeling","DFMA & MBD","CAM 2.5-axis","CAM 3-axis","Simulasi & postprocessing","Multi-axis & hybrid","AI-assisted CAM","Digital twin","Pemodelan geometri","PLM"],
+      who:"Mahasiswa", isi:"14 pertemuan (280 slide) + 18 topik (PDF)",
       url:"https://muasmuchtar.github.io/teknologi-cad-cam/", repo:"https://github.com/muasmuchtar/teknologi-cad-cam"
+    },
+    {
+      cls:"b10", ico:"🏗️", title:"Manajemen Produksi", sub:"Manajemen Operasi · D4 Teknik Manufaktur",
+      desc:"Slide 45 kegiatan belajar dalam tiga kluster: PPIC; sistem manufaktur dan tata letak; mutu, lean, dan Industri 4.0. Dilengkapi seri Industri Nikel 16 pertemuan dengan bahan ajar, buku ajar, dan RPS.",
+      chips:["Peramalan","MPS & MRP","Penjadwalan","Tata letak","Studi kerja","Line balancing","SPC & mutu","Lean & 5S","TPM & OEE","Industri nikel"],
+      who:"Mahasiswa", isi:"45 slide kluster + 16 pertemuan nikel (slide + bahan ajar) + buku ajar",
+      url:"https://muasmuchtar.github.io/manajemen-produksi/", repo:"https://github.com/muasmuchtar/manajemen-produksi",
+      extra:[["⛏️ Seri Industri Nikel","https://muasmuchtar.github.io/manajemen-produksi/#nikel"]]
+    },
+    {
+      cls:"b12", ico:"🔧", title:"Mesin CNC DAHLIH", sub:"Praktik CNC · Teknik Mesin",
+      desc:"Delapan bahan ajar interaktif tentang komponen vertical machining center DAHLIH di bengkel PNUP, lengkap dengan peta komponen, contoh perhitungan, soal, dan Mode Guru.",
+      chips:["ATC","Meja mesin","Panel kelistrikan","Panel kontrol FANUC","Coolant chiller","Pneumatik","Chip conveyor","Spindle head"],
+      who:"Mahasiswa", isi:"8 bahan ajar interaktif",
+      url:"https://muasmuchtar.github.io/mesin-cnc-dahlih/", repo:"https://github.com/muasmuchtar/mesin-cnc-dahlih"
     },
     {
       cls:"b4", ico:"🧮", title:"Kalkulator Nilai CAD/CAM", sub:"Praktik CNC · D3 Teknik Mesin",
