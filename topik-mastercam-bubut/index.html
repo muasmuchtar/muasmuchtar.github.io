@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topik Mastercam Bubut</title>
+<meta name="description" content="Topik bahasan praktikum Mastercam X4 Bubut, Teknik Manufaktur PNUP: Pra CAD/CAM, CAD Bubut, dan CAM Bubut, siap disalin ke SIAKAD.">
+<style>
+  :root{--bg:#F3F5F9;--panel:#FFFFFF;--ink:#18213A;--soft:#5E6A82;--line:#DDE3EC;--navy:#14284B;--navy2:#1F3F73;--yellow:#F5B700;--cyan:#12A4C4;--cyan-bg:#E2F5FA;--ok:#0F7A4A;}
+  @media (prefers-color-scheme: dark){:root{--bg:#0F1524;--panel:#18213A;--ink:#E8ECF4;--soft:#A3AEC4;--line:#2A3654;--cyan-bg:#13324170;--ok:#4ADE80;}}
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.5;}
+  header{background:linear-gradient(120deg,var(--navy),var(--navy2));color:#fff;padding:36px 16px 56px;}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 16px;} header .wrap{padding:0;}
+  .back{color:#C8D3EA;font-size:13.5px;text-decoration:none;font-weight:700;}
+  .tag{display:inline-block;background:var(--yellow);color:#2B2100;font-weight:800;font-size:12px;letter-spacing:.06em;padding:4px 10px;border-radius:20px;text-transform:uppercase;margin-top:14px;}
+  h1{margin:10px 0 6px;font-size:clamp(23px,4vw,32px);line-height:1.2;}
+  header p{margin:0;color:#C8D3EA;max-width:720px;font-size:15px;}
+  .hbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+  .hbtn{display:inline-block;background:var(--yellow);color:#2B2100;font-weight:800;font-size:13.5px;padding:9px 14px;border-radius:9px;text-decoration:none;border:0;cursor:pointer;font-family:inherit;}
+  .intro{margin:-28px auto 20px;background:var(--panel);border:1px solid var(--line);border-left:5px solid var(--yellow);border-radius:12px;padding:12px 16px;font-size:13.5px;color:var(--soft);box-shadow:0 6px 20px rgba(20,40,75,.08);}
+  h2.sec{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--soft);margin:24px 0 4px;}
+  .gdesc{font-size:13.5px;color:var(--soft);margin:0 0 10px;}
+  .item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start;}
+  .no{flex:0 0 auto;min-width:46px;height:42px;padding:0 6px;border-radius:10px;background:var(--cyan-bg);color:var(--cyan);display:grid;place-items:center;font-weight:800;font-family:"SFMono-Regular",Consolas,monospace;font-size:13px;}
+  .it{flex:1;min-width:0;}
+  .it b{display:block;font-size:15px;line-height:1.3;}
+  .it ul{margin:6px 0 0;padding-left:18px;font-size:13.5px;color:var(--soft);}
+  .copy{flex:0 0 auto;font:inherit;font-weight:700;font-size:12.5px;border:1px solid var(--line);background:transparent;color:var(--cyan);padding:6px 10px;border-radius:8px;cursor:pointer;}
+  .copy.done{color:var(--ok);border-color:var(--ok);}
+  figure{margin:10px 0 0;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px;}
+  figure img{display:block;width:100%;height:auto;border-radius:8px;}
+  figcaption{font-size:12.5px;color:var(--soft);margin-top:6px;}
+  footer{border-top:1px solid var(--line);margin-top:28px;padding:18px 0 40px;font-size:12.5px;color:var(--soft);}
+  footer a{color:var(--cyan);}
+  @media (max-width:520px){ .item{flex-wrap:wrap;} .copy{margin-left:58px;} }
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <a class="back" href="../">← Portofolio</a><br>
+  <span class="tag">Praktikum CNC · Teknik Manufaktur · PNUP</span>
+  <h1>Topik Bahasan Mastercam X4 Bubut</h1>
+  <p>26 topik dalam tiga tahap: dasar-dasar Mastercam (Pra CAD/CAM), menggambar benda bubut (CAD), dan membuat toolpath sampai program CNC (CAM).</p>
+  <div class="hbtns"><a class="hbtn" href="peta-konsep-mastercam-x4-bubut.pdf" target="_blank" rel="noopener">🗺️ Peta Konsep (PDF)</a><button class="hbtn" id="copyAll">📋 Salin semua topik</button></div>
+</div></header>
+<main class="wrap">
+  <div class="intro">Klik <b>Salin</b> pada tiap topik untuk menyalin judul dan pokok bahasannya, misalnya ke kolom topik SIAKAD. Urutan belajar: Pra CAD/CAM → CAD Bubut → CAM Bubut.</div>
+  <div id="groups"></div>
+  <h2 class="sec">Peta konsep</h2>
+  <figure><a href="peta-konsep.jpg" target="_blank" rel="noopener"><img src="peta-konsep.jpg" alt="Peta konsep Mastercam X4 Bubut" loading="lazy"></a><figcaption>Klik gambar untuk memperbesar.</figcaption></figure>
+</main>
+<footer class="wrap">Politeknik Negeri Ujung Pandang · Disusun oleh Muas M. Lihat juga <a href="../topik-mastercam/">Topik Bahasan Mastercam 2026 Mill 2D</a> dan <a href="https://muasmuchtar.github.io/teknologi-cad-cam/#praktikum">Modul Praktikum Mastercam</a>.</footer>
+<script>
+  const G = [["pra", "Pra CAD/CAM · Dasar-dasar Mastercam X4", "Navigasi layar, pengaturan, dan perintah gambar dasar yang dipakai di seluruh seri.", [["Cara Zoom In dan Zoom Out Objek", ["Putar roda mouse untuk memperbesar atau memperkecil", "Posisi kursor menjadi pusat pembesaran", "Zoom Window: tarik kotak di area yang ingin diperbesar", "Fit: tampilkan kembali seluruh objek"]], ["Cara Mengubah Warna Latar Belakang Area Kerja", ["Buka Settings › Configuration", "Pilih Colors › Graphics background color", "Klik warna yang diinginkan (misalnya 15 = putih)", "Klik Apply, Yes, lalu OK"]], ["Cara Mengubah Warna, Tebal Garis, dan Jenis Garis", ["Pilih garis yang akan diubah", "Klik kanan ikon warna untuk mengganti warna", "Klik kanan ikon ketebalan untuk mengganti tebal garis", "Klik kanan ikon jenis garis untuk mengganti jenis garis"]], ["Cara Memotong / Menggunting Objek (Trim)", ["Edit › Trim/Break › Trim/Break/Extend", "Pilih mode Divide", "Klik bagian garis yang ingin dibuang", "Klik OK untuk selesai"]], ["Cara Menampilkan Titik Nol (Titik Referensi)", ["Alt + F9: tampilkan / sembunyikan simbol sumbu", "F9: tampilkan / sembunyikan garis sumbu panjang", "Titik nol berada di X = 0, Y = 0, Z = 0"]], ["Cara Memilih Satuan Ukuran (Metrik atau Inci)", ["Cek satuan aktif di pojok kanan bawah layar", "Buka Settings › Configuration", "Pada Current, pilih Metric atau English", "Klik OK"]], ["Cara Menggeser dan Memutar Tampilan (Pan dan Spin)", ["Settings › Configuration › Screen", "Pada Middle Button, pilih Pan atau Spin", "Tahan tombol tengah mouse sambil menggeser mouse", "Pan = menggeser tampilan, Spin = memutar tampilan"]], ["Cara Mencerminkan Objek (Mirror)", ["Xform › Mirror", "Seleksi objek, lalu pilih Copy", "Klik garis sumbu cermin, lalu OK", "Screen › Clear Colors untuk merapikan warna hasil transformasi"]], ["Cara Membuat Garis Lurus (Line), Fillet, dan Chamfer", ["Create › Line › Endpoint, atau ikon di toolbar", "Isi Length dan Angle, lalu Apply", "Fillet: membuat sudut bulat dengan radius tertentu", "Chamfer: membuat sudut miring dengan jarak tertentu"]], ["Cara Membuat Level", ["Klik Level di status bar", "Isi Number dan Name untuk membuat level baru", "Main Level (hijau) adalah level yang sedang aktif", "Kolom Visible untuk menampilkan atau menyembunyikan level"]], ["Cara Menghapus Objek", ["Klik objek satu per satu, lalu tekan Delete", "Seleksi blok: tarik kotak dari kiri atas ke kanan bawah", "Hanya objek yang seluruhnya berada di dalam kotak yang ikut terhapus"]], ["Cara Memberi Ukuran (Dimension)", ["Create › Drafting › Dimension", "Smart Dimension untuk semua jenis ukuran", "Mengatur tinggi teks di Dimension Text", "Mengatur jumlah angka desimal di Dimension Attributes"]], ["Cara Membuat Lingkaran (Circle)", ["Create › Arc › Circle Center Point", "Klik titik pusat lingkaran", "Isi radius atau diameter", "Klik Apply untuk membuat lingkaran berikutnya, atau OK untuk selesai"]], ["Cara Mengaktifkan AutoSave", ["Settings › Configuration › AutoSave", "Centang AutoSave", "Isi interval penyimpanan (menit)", "Klik OK, lalu Yes"]]]], ["cad", "CAD Bubut · Menggambar poros bertingkat", "Dari profil setengah benda sampai gambar utuh berdimensi dan tersusun per level.", [["Menggambar Profil Benda Bubut", ["Menggambar setengah profil di atas garis sumbu", "Line dengan Length dan Angle, lalu Apply", "Arah sudut: 90° ke atas, 180° ke kiri, 270° ke bawah", "Tinggi tiap tingkat = ½ selisih diameter"]], ["Merapikan Profil: Trim, Chamfer, dan Garis Sumbu", ["Trim untuk membuang garis yang menonjol", "Zoom Window untuk memperbesar area kecil", "Chamfer pada sudut ujung poros", "Menjadikan garis bawah sebagai garis sumbu"]], ["Mirror, Garis Penghubung, dan Dimensi Ulir", ["Memperpanjang garis sumbu", "Mirror (Copy) terhadap garis sumbu", "Garis vertikal penghubung di setiap tingkat", "Drafting Options dan dimensi ulir"]], ["Dimensi Lengkap, Keterangan Chamfer, dan Level", ["Mengatur Drafting Options lebih dulu", "Dimensi diameter dan panjang tiap tingkat", "Keterangan chamfer: jarak × sudut", "Membuat level untuk benda, sumbu, dan dimensi"]], ["Mengatur Level Gambar Bubut", ["Pilih objek, lalu klik kanan Level untuk memindahkannya", "Memisahkan dimensi, benda, dan kontur ke level masing-masing", "Kolom Visible untuk menampilkan atau menyembunyikan level"]]]], ["cam", "CAM Bubut · Toolpath dan program CNC", "Roughing, finishing, ulir, simulasi, hingga post processing menjadi G-code.", [["Memulai Toolpath Bubut (Lathe dan Rough)", ["Machine Type › Lathe › Default", "Toolpaths › Rough dan memberi nama file NC", "Chaining Partial pada profil benda", "Memilih pahat roughing, Feed rate, dan Spindle speed"]], ["Parameter Roughing, Backplot, dan Cycle Time", ["Coolant: Flood → On", "Feed rate dan Spindle speed (CSS)", "Depth of cut dan Stock to leave", "Backplot dan Cycle Time"]], ["Simulasi Verify dan Memulai Finishing", ["Menampilkan tip dan holder pahat", "Verify: simulasi benda padat", "Toolpaths › Finish dengan chaining Partial", "Memilih pahat finishing berujung runcing"]], ["Parameter Finishing dan Simulasi Semua Operasi", ["Coolant untuk finishing", "Feed rate lebih kecil dari roughing", "Stock to leave = 0", "Verify dan Backplot semua operasi"]], ["Finishing Bagian Menurun dan Lead In/Out", ["Mengecek total waktu proses di tab Info", "Finishing khusus dengan chaining Partial", "Mematikan Lead In/Out bila berisiko menabrak benda kerja", "Backplot dan Verify semua operasi"]], ["Membuat Toolpath Ulir (Thread)", ["Toolpaths › Thread dan memilih pahat ulir", "Memakai putaran tetap (RPM) untuk ulir", "Menentukan titik awal, titik akhir, diameter major dan minor", "Memakai tabel standar ulir dan mengatur kedalaman potong"]], ["Post Processing: Dari Toolpath ke Program CNC", ["Verify semua operasi", "Mengecek total waktu proses di tab Info", "Post processing → file NC", "Transfer program ke mesin CNC"]]]]];
+  const P = {pra:"P", cad:"CAD", cam:"CAM"};
+  const root = document.getElementById("groups"); const all = [];
+  G.forEach(([k,name,desc,items])=>{
+    root.insertAdjacentHTML("beforeend", `<h2 class="sec">${name}</h2><p class="gdesc">${desc}</p>`);
+    items.forEach(([t,b],j)=>{
+      const s = `${P[k]}${j+1} ${t}: ${b.join("; ")}`; all.push(s);
+      const el = document.createElement("div"); el.className = "item";
+      el.innerHTML = `<span class="no">${P[k]}${j+1}</span><span class="it"><b></b><ul>${b.map(()=>"<li></li>").join("")}</ul></span><button class="copy">Salin</button>`;
+      el.querySelector("b").textContent = t; el.querySelectorAll("li").forEach((li,x)=>li.textContent=b[x]);
+      el.querySelector(".copy").onclick = e => copy(s, e.currentTarget);
+      root.appendChild(el);
+    });
+  });
+  function copy(s, btn){
+    const ok = ()=>{ const o=btn.textContent; btn.textContent="✓ Tersalin"; btn.classList.add("done"); setTimeout(()=>{btn.textContent=o;btn.classList.remove("done");},1500); };
+    if (navigator.clipboard) navigator.clipboard.writeText(s).then(ok, ()=>fallback(s,ok)); else fallback(s,ok);
+  }
+  function fallback(s, ok){ const t=document.createElement("textarea"); t.value=s; document.body.appendChild(t); t.select(); try{document.execCommand("copy"); ok();}catch(e){} t.remove(); }
+  document.getElementById("copyAll").onclick = e => copy(all.join("\n"), e.currentTarget);
+</script>
+</body>
+</html>
